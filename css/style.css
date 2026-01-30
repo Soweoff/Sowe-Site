@@ -829,11 +829,6 @@ section {
     text-align: center;
   }
 
-  .partner-media {
-    width: 100%;
-    height: 180px;
-  }
-
   .partner-button {
     margin-top: 1rem;
   }
@@ -859,4 +854,25 @@ section {
     gap: 1.5rem;
     text-align: center;
   }
+}
+
+.partner-media-video {
+  width: 100%;
+  height: 180px;
+}
+
+.partner-media-video {
+  width: 220px; /* controla o tamanho */
+  height: 120px; /* proporção de banner */
+  flex-shrink: 0; /* impede o flex de esmagar */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+
+.partner-media-video video {
+  pointer-events: none; /* impede clique no vídeo */
+  width: 100%;
+  height: 100%;
+  border: none;
 }

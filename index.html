@@ -33,7 +33,9 @@
       <header>
         <h1 class="logo">SOWE</h1>
 
-        <nav>
+        <button class="menu-toggle" aria-label="Abrir menu">☰</button>
+
+        <nav class="nav">
           <a href="youtube.html">Youtube</a>
           <a href="edition.html">Edição</a>
           <a href="CS2.html">CS2</a>
@@ -286,5 +288,24 @@
         © 2026 Sowe Studio. CNPJ: 62.808.317/0001-06. All rights reserved.
       </div>
     </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const toggle = document.querySelector(".menu-toggle");
+        const nav = document.querySelector(".nav");
+
+        if (!toggle || !nav) return;
+
+        toggle.addEventListener("click", () => {
+          nav.classList.toggle("active");
+        });
+
+        document.querySelectorAll(".nav a").forEach((link) => {
+          link.addEventListener("click", () => {
+            nav.classList.remove("active");
+          });
+        });
+      });
+    </script>
   </body>
 </html>

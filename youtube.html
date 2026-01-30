@@ -154,16 +154,18 @@
           >
         </div>
       </div>
+
       <script>
         async function fetchAllChannels() {
-          // COLE A URL QUE VOCÊ COPIOU AQUI EMBAIXO:
-          const APPS_SCRIPT_URL = "SUA_URL_DO_APPS_SCRIPT_AQUI";
+          // 1. COLE AQUI A URL QUE VOCÊ COPIOU DO APPS SCRIPT
+          const APPS_SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbxF6IP6q0JIFZoyAqjiPTW5oBw1vYLxkNJoAL7E9ky_10ajRztHkVuMk95zKxVoQEmFng/exec";
 
           try {
             const response = await fetch(APPS_SCRIPT_URL);
             const data = await response.json();
 
-            // Mapeamento dos IDs do YouTube para os IDs do seu HTML
+            // 2. Mapeamento com todos os IDs entre aspas
             const elementMap = {
               "UCxwte-dvs1WgDN1okSweY3g": {
                 sub: "subs-vfx",
@@ -176,7 +178,7 @@
             data.forEach((channel) => {
               const els = elementMap[channel.id];
               if (els) {
-                // Atualiza o texto no seu HTML formatando o número (ex: 1.500)
+                // Atualiza os pontos pelos números reais formatados
                 document.getElementById(els.sub).innerText =
                   channel.subs.toLocaleString("pt-BR");
                 document.getElementById(els.view).innerText =
@@ -188,7 +190,7 @@
           }
         }
 
-        // ESSA LINHA É ESSENCIAL: Faz o script rodar ao abrir a página
+        // Faz a função rodar assim que a página terminar de carregar
         window.onload = fetchAllChannels;
       </script>
 

@@ -723,3 +723,30 @@ section {
     grid-template-columns: 1fr;
   }
 }
+
+.youtube-live-stats {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  justify-content: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-item span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff; /* Ou a cor de destaque do seu gradient */
+}
+
+.stat-item small {
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+}

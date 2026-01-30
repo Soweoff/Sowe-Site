@@ -58,71 +58,68 @@
           <h2>Meus Canais no YouTube</h2>
 
           <div class="youtube-list">
-            <!-- CARD -->
             <div class="youtube-card">
               <img
                 class="channel-avatar"
                 src="https://res.cloudinary.com/dvqbwddan/image/upload/v1769353632/Sowe-Site/Imagem_do_WhatsApp_de_2025-12-14_%C3%A0_s_00.53.30_ea29c35f_wwn1ze.jpg"
                 alt="Sowe VFX"
               />
-
               <div class="channel-info">
                 <h3>Sowe VFX</h3>
-                <p>7 inscritos • 5,1 mil (últimos 12 meses)</p>
+                <p>
+                  <span id="subs-vfx">...</span> inscritos •
+                  <span id="views-vfx">...</span> views totais
+                </p>
               </div>
-
               <a
                 href="https://www.youtube.com/@Sowevfx"
                 target="_blank"
                 class="channel-button"
                 rel="noopener noreferrer"
+                >Ver canal</a
               >
-                Ver canal
-              </a>
             </div>
 
-            <!-- CARD -->
             <div class="youtube-card">
               <img
                 class="channel-avatar"
                 src="https://res.cloudinary.com/dvqbwddan/image/upload/v1769353606/Sowe-Site/Imagem_do_WhatsApp_de_2025-03-30_%C3%A0_s_23.31.38_23867bab_xskp2y.jpg"
                 alt="Lil Sowe"
               />
-
               <div class="channel-info">
                 <h3>Lil Sowe</h3>
-                <p>70 inscritos • 125,4 mil views (últimos 12 meses)</p>
+                <p>
+                  <span id="subs-lil">...</span> inscritos •
+                  <span id="views-lil">...</span> views totais
+                </p>
               </div>
-
               <a
                 href="https://www.youtube.com/@LiLSoweoff"
                 target="_blank"
                 class="channel-button"
+                >Ver canal</a
               >
-                Ver canal
-              </a>
             </div>
 
-            <!-- CARD -->
             <div class="youtube-card">
               <img
                 class="channel-avatar"
                 src="https://res.cloudinary.com/dvqbwddan/image/upload/v1769353642/Sowe-Site/Art-WhatsApp_dcoss1.png"
                 alt="Soweoff"
               />
-
               <div class="channel-info">
                 <h3>Soweoff</h3>
-                <p>748 inscritos • 95 mil views (últimos 12 meses)</p>
+                <p>
+                  <span id="subs-off">...</span> inscritos •
+                  <span id="views-off">...</span> views totais
+                </p>
               </div>
-
               <a
                 href="https://www.youtube.com/@Sowe_off"
                 target="_blank"
                 class="channel-button"
+                >Ver canal</a
               >
-                Ver canal
-              </a>
             </div>
           </div>
         </section>
@@ -162,5 +159,58 @@
         © 2026 Sowe Studio. CNPJ: 62.808.317/0001-06. All rights reserved.
       </div>
     </footer>
+
+    <script>
+      async function fetchAllChannels() {
+        // Lista atualizada com seus IDs reais
+        const channels = [
+          {
+            id: "UCxwte-dvs1WgDN1okSweY3g",
+            subEl: "subs-vfx",
+            viewEl: "views-vfx",
+          }, // Sowe VFX
+          {
+            id: "UCYoE3K0i6DBznVicn7pOmww",
+            subEl: "subs-lil",
+            viewEl: "views-lil",
+          }, // Lil Sowe
+          {
+            id: "UCMQL_xF785CLONsDaASzUmQ",
+            subEl: "subs-off",
+            viewEl: "views-off",
+          }, // Soweoff
+        ];
+
+        for (const channel of channels) {
+          try {
+            const response = await fetch(
+              `https://yt.lemnoslife.com/channels?id=${channel.id}`,
+            );
+            const data = await response.json();
+
+            if (data && data.items && data.items[0]) {
+              const stats = data.items[0].statistics;
+
+              // Atualiza os inscritos
+              document.getElementById(channel.subEl).innerText = Number(
+                stats.subscriberCount,
+              ).toLocaleString("pt-BR");
+
+              // Atualiza as views totais
+              document.getElementById(channel.viewEl).innerText = Number(
+                stats.viewCount,
+              ).toLocaleString("pt-BR");
+            }
+          } catch (error) {
+            console.error(`Erro ao carregar canal ${channel.id}:`, error);
+            document.getElementById(channel.subEl).innerText = "Indisponível";
+            document.getElementById(channel.viewEl).innerText = "Indisponível";
+          }
+        }
+      }
+
+      // Garante que o script rode assim que a página carregar
+      window.onload = fetchAllChannels;
+    </script>
   </body>
 </html>

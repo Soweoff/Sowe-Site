@@ -780,37 +780,7 @@ section {
   .partner-button {
     margin-top: 1rem;
   }
-  nav {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
-    margin-left: -5%;
-    display: none; /* depois você pode virar menu hamburger */
-  }
 
-  .nav {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 75%;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.97);
-    backdrop-filter: blur(10px);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 6rem 2rem 2rem;
-    transition: right 0.3s ease;
-    z-index: 1000;
-  }
-
-  .nav.active {
-    right: 0;
-  }
-
-  .nav a {
-    font-size: 1.2rem;
-  }
   .content {
     margin-left: 0;
     max-width: 100%;
@@ -886,20 +856,99 @@ section {
   z-index: 1000;
 }
 
-.menu-toggle {
-  display: block;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: white;
-  cursor: pointer;
-  z-index: 1001;
-}
-
 @media (max-width: 600px) {
   .services-grid,
   .products-grid,
   .videos-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ========================= */
+/* FIX DEFINITIVO MENU MOBILE */
+/* ========================= */
+
+/* GARANTE MENU DESKTOP NORMAL */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* ESCONDE HAMBURGER NO DESKTOP */
+.menu-toggle {
+  display: none;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  /* ESCONDE MENU DESKTOP */
+  .nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 75%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.97);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    gap: 2rem;
+    padding: 6rem 2rem;
+    transition: right 0.3s ease;
+    z-index: 1000;
+  }
+
+  /* MENU ABERTO */
+  .nav.active {
+    right: 0;
+  }
+
+  /* MOSTRA HAMBURGER */
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  /* AJUSTE LINKS */
+  .nav a {
+    font-size: 1.2rem;
+  }
+}
+
+/* =============================== */
+/* AJUSTE HEADER MOBILE (FINAL) */
+/* =============================== */
+
+@media (max-width: 768px) {
+  /* Esconde botão "Em breve" no mobile */
+  .btn-signing {
+    display: none;
+  }
+
+  /* Header layout mobile */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Garante logo à esquerda */
+  .logo {
+    flex: 1;
+  }
+
+  /* Menu toggle ocupa o lugar do botão */
+  .menu-toggle {
+    display: block;
+    margin-left: auto;
+  }
+}
+
+body.menu-open {
+  overflow: hidden;
 }

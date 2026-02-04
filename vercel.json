@@ -1,3 +1,9 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/cs2", "destination": "/cs2.html" },
+    { "source": "/youtube", "destination": "/youtube.html" },
+    { "source": "/edition", "destination": "/edition.html" },
+    { "source": "/product", "destination": "/product.html" }
+  ]
 }

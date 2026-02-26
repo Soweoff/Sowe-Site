@@ -56,8 +56,7 @@ export default function Websites() {
                   >
                     Visitar Site
                   </a>
-
-                  <button className="btn-secondary">Ver Detalhes</button>
+                  {/*  <button className="btn-secondary">Ver Detalhes</button> */}
                 </div>
               </div>
             </div>

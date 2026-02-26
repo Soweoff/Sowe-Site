@@ -5,14 +5,23 @@ export default function Websites() {
     {
       title: "Sowe Studio",
       description: "Site institucional focado em branding.",
-      image: "https://via.placeholder.com/600x400",
+      image:
+        "https://res.cloudinary.com/dvqbwddan/image/upload/v1772083015/Sowe-Site/Sites/Sowe_Site_nzowxk.jpg",
       link: "https://sowestudio.com.br",
     },
     {
-      title: "Cliente X",
-      description: "Landing page focada em conversão.",
-      image: "https://via.placeholder.com/600x400",
-      link: "https://exemplo.com",
+      title: "TNK Store",
+      description: "Site focada em conversão de vendas.",
+      image:
+        "https://res.cloudinary.com/dvqbwddan/image/upload/v1772082969/Sowe-Site/Sites/TNK_Store_u5mv3k.jpg",
+      link: "https://tnkstore3.lojavirtualnuvem.com.br/",
+    },
+    {
+      title: "Hotmart Área de Membros",
+      description: "Área de membros personalizada para cursos online.",
+      image:
+        "https://res.cloudinary.com/dvqbwddan/image/upload/v1772082969/Sowe-Site/Sites/TNK_Store_u5mv3k.jpg",
+      link: "https://tnkstore3.lojavirtualnuvem.com.br/",
     },
   ];
 

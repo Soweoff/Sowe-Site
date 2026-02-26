@@ -25,6 +25,7 @@ export default function Layout() {
             <Link to="/edition">Edição</Link>
             <Link to="/cs2">CS2</Link>
             <Link to="/products">Produtos</Link>
+            <Link to="/websites">WebSites</Link>
           </nav>
 
           {/* BOTÃO DINÂMICO */}

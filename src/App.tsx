@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Websites from "./pages/Websites";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/websites" element={<Websites />} />
         </Route>
 
         {/* Fora do layout */}

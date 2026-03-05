@@ -39,10 +39,7 @@ export default function UserDashboard() {
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
-        events={[
-          { title: "Teste 1", date: "2026-03-02" },
-          { title: "Teste 2", date: "2026-03-03" },
-        ]}
+        events={events}
       />
     </div>
   );

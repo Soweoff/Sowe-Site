@@ -13,7 +13,7 @@ interface DecodedToken {
 interface AuthContextType {
   token: string | null;
   role: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<string>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -23,18 +23,21 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const storedToken = localStorage.getItem("token");
 
-  if (storedToken) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
-  }
-
   let decoded: DecodedToken | null = null;
 
-  try {
-    if (storedToken) {
+  if (storedToken) {
+    try {
       decoded = jwtDecode<DecodedToken>(storedToken);
+
+      // verifica se token expirou
+      if (decoded.exp * 1000 < Date.now()) {
+        localStorage.removeItem("token");
+      } else {
+        api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+      }
+    } catch {
+      localStorage.removeItem("token");
     }
-  } catch {
-    localStorage.removeItem("token");
   }
 
   const [token, setToken] = useState<string | null>(storedToken);
@@ -47,15 +50,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const accessToken = response.data.access_token;
+
     const decodedToken = jwtDecode<DecodedToken>(accessToken);
 
     localStorage.setItem("token", accessToken);
 
-    // 🔥 IMPORTANTE
     api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
     setToken(accessToken);
     setRole(decodedToken.role);
+
+    return accessToken;
   }
 
   async function register(name: string, email: string, password: string) {
@@ -67,16 +72,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const accessToken = response.data.access_token;
 
+    const decodedToken = jwtDecode<DecodedToken>(accessToken);
+
     localStorage.setItem("token", accessToken);
+
     api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
     setToken(accessToken);
+    setRole(decodedToken.role);
   }
 
   function logout() {
     localStorage.removeItem("token");
 
-    // 🔥 IMPORTANTE
     delete api.defaults.headers.common["Authorization"];
 
     setToken(null);
@@ -92,6 +100,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used inside AuthProvider");
+
+  if (!context) {
+    throw new Error("useAuth must be used inside AuthProvider");
+  }
+
   return context;
 }

@@ -16,21 +16,24 @@ export default function Login() {
     try {
       setLoading(true);
 
-      await login(email, password);
+      // login retorna o token
+      const token = await login(email, password);
 
-      // pega role do localStorage
-      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token não recebido");
+      }
 
-      if (token) {
-        const decoded: any = JSON.parse(atob(token.split(".")[1]));
+      // decodifica JWT
+      const decoded: any = JSON.parse(atob(token.split(".")[1]));
 
-        if (decoded.role === "ADMIN") {
-          navigate("/admin");
-        } else {
-          navigate("/dashboard");
-        }
+      // redireciona baseado no role
+      if (decoded.role === "ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
       }
     } catch (error) {
+      console.error(error);
       alert("Email ou senha inválidos");
     } finally {
       setLoading(false);

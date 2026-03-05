@@ -1247,6 +1247,7 @@ body.menu-open {
 
 .fc-toolbar-title {
   font-size: 24px;
+  background: rgba(20, 20, 20, 0.6);
 }
 
 .fc-button {

@@ -1213,33 +1213,39 @@ body.menu-open {
   cursor: pointer;
 }
 
-.dashboard-container {
-  padding: 40px;
-  max-width: 1200px;
-  margin: auto;
-}
-
 .dashboard-title {
   font-size: 32px;
   margin-bottom: 25px;
   color: white;
 }
 
+.dashboard-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 60px 20px;
+}
+
 .calendar-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
   background: rgba(20, 20, 20, 0.6);
   backdrop-filter: blur(20px);
-  padding: 25px;
   border-radius: 16px;
+  padding: 30px;
 }
 
 /* FullCalendar Dark */
 
 .fc {
   color: white;
+  width: 100%;
+  font-size: 16px;
 }
 
 .fc-toolbar-title {
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .fc-button {
@@ -1253,6 +1259,7 @@ body.menu-open {
 
 .fc-daygrid-day {
   background: rgba(255, 255, 255, 0.03);
+  height: 100px;
 }
 
 .fc-daygrid-event {

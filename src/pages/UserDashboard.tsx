@@ -18,38 +18,38 @@ export default function UserDashboard() {
 
       const tasks = res.data?.data?.boards?.[0]?.items_page?.items || [];
 
-      const formattedEvents = tasks.map((task: any) => {
-        const dateColumn = task.column_values?.find(
-          (col: any) => col.id === "date",
-        );
+      const formattedEvents = tasks
+        .map((task: any) => {
+          const dateColumn = task.column_values?.find(
+            (col: any) => col.id === "date",
+          );
 
-        const statusColumn = task.column_values?.find(
-          (col: any) => col.id === "status",
-        );
+          const statusColumn = task.column_values?.find(
+            (col: any) => col.id === "status",
+          );
 
-        let date = null;
+          let date = null;
 
-        if (dateColumn?.value) {
-          const parsed = JSON.parse(dateColumn.value);
-          date = parsed.date;
-        }
+          if (dateColumn?.value) {
+            const parsed = JSON.parse(dateColumn.value);
+            date = parsed.date;
+          }
 
-        let color = "#6c63ff";
+          if (!date) return null;
 
-        if (statusColumn?.text === "Feito") {
-          color = "#22c55e";
-        } else if (statusColumn?.text === "Em andamento") {
-          color = "#f59e0b";
-        } else if (statusColumn?.text === "Não iniciado") {
-          color = "#64748b";
-        }
+          let color = "#6c63ff";
 
-        return {
-          title: task.name,
-          date: date,
-          backgroundColor: color,
-        };
-      });
+          if (statusColumn?.text === "Feito") color = "#22c55e";
+          if (statusColumn?.text === "Em andamento") color = "#f59e0b";
+          if (statusColumn?.text === "Não iniciado") color = "#64748b";
+
+          return {
+            title: task.name,
+            date,
+            backgroundColor: color,
+          };
+        })
+        .filter(Boolean);
 
       setEvents(formattedEvents);
     }

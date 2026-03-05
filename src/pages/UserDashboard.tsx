@@ -27,7 +27,12 @@ export default function UserDashboard() {
           (col: any) => col.id === "status",
         );
 
-        const date = dateColumn?.text;
+        let date = null;
+
+        if (dateColumn?.value) {
+          const parsed = JSON.parse(dateColumn.value);
+          date = parsed.date;
+        }
 
         let color = "#6c63ff";
 

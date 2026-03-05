@@ -1268,3 +1268,7 @@ body.menu-open {
   padding: 3px;
   border-radius: 6px;
 }
+
+.fc-scrollgrid-sync-inner {
+  background: rgba(20, 20, 20, 0.6);
+}

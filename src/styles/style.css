@@ -1212,3 +1212,52 @@ body.menu-open {
   border-radius: 8px;
   cursor: pointer;
 }
+
+.dashboard-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.dashboard-title {
+  font-size: 32px;
+  margin-bottom: 25px;
+  color: white;
+}
+
+.calendar-wrapper {
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(20px);
+  padding: 25px;
+  border-radius: 16px;
+}
+
+/* FullCalendar Dark */
+
+.fc {
+  color: white;
+}
+
+.fc-toolbar-title {
+  font-size: 20px;
+}
+
+.fc-button {
+  background: #6c63ff !important;
+  border: none !important;
+}
+
+.fc-button:hover {
+  background: #5750d4 !important;
+}
+
+.fc-daygrid-day {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.fc-daygrid-event {
+  background: #6c63ff;
+  border: none;
+  padding: 3px;
+  border-radius: 6px;
+}

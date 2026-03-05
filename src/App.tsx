@@ -16,18 +16,26 @@ import UserDashboard from "./pages/UserDashboard";
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          {/* Públicas */}
-          <Route path="/" element={<Home />} />
-          <Route path="/youtube" element={<Youtube />} />
-          <Route path="/cs2" element={<CS2 />} />
-          <Route path="/edition" element={<Edition />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/websites" element={<Websites />} />
-        </Route>
+      <Route element={<Layout />}>
+        {/* Públicas */}
+        <Route path="/" element={<Home />} />
+        <Route path="/youtube" element={<Youtube />} />
+        <Route path="/cs2" element={<CS2 />} />
+        <Route path="/edition" element={<Edition />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/websites" element={<Websites />} />
+
+        {/* Dashboard USER */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Dashboard ADMIN */}
         <Route
@@ -38,17 +46,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Dashboard USUÁRIO */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      </Route>
     </BrowserRouter>
   );
 }

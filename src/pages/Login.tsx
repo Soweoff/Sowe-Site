@@ -27,7 +27,7 @@ export default function Login() {
         if (decoded.role === "ADMIN") {
           navigate("/admin");
         } else {
-          navigate("/usedashboard");
+          navigate("/dashboard");
         }
       }
     } catch (error) {

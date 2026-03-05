@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Layout() {
-  const { token, logout } = useAuth();
+  const { token, logout, role } = useAuth();
 
   return (
     <div className="layout-wrapper">
@@ -33,10 +33,14 @@ export default function Layout() {
             <Link to="/login" className="btn-signing">
               Login
             </Link>
+          ) : role === "ADMIN" ? (
+            <Link to="/admin" className="btn-signing">
+              Dashboard
+            </Link>
           ) : (
-            <button onClick={logout} className="btn-signing">
-              Logout
-            </button>
+            <Link to="/dashboard" className="btn-signing">
+              Dashboard
+            </Link>
           )}
         </header>
 

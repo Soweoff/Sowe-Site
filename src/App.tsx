@@ -8,6 +8,7 @@ import Edition from "./pages/Edition";
 import Products from "./pages/Products";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Websites from "./pages/Websites";
 import UserDashboard from "./pages/UserDashboard";
@@ -28,8 +29,17 @@ function App() {
           <Route path="/websites" element={<Websites />} />
         </Route>
 
-        {/* Fora do layout */}
+        {/* Dashboard ADMIN */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
+        {/* Dashboard USUÁRIO */}
         <Route
           path="/dashboard"
           element={

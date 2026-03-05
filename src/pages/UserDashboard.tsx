@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import "@fullcalendar/common/main.css";
+import "@fullcalendar/daygrid/main.css";
 
 interface Event {
   title: string;

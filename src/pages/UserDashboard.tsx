@@ -19,11 +19,11 @@ export default function UserDashboard() {
 
       console.log("Monday response:", res.data);
 
-      const tasks = res.data.data.boards[0].items_page.items;
+      const tasks = res.data?.data?.boards?.[0]?.items_page?.items || [];
 
       const formattedEvents = tasks.map((task: any) => ({
         title: task.name,
-        date: "2026-03-02", // depois vamos pegar a data real
+        date: "2026-03-02",
       }));
 
       setEvents(formattedEvents);
@@ -33,13 +33,16 @@ export default function UserDashboard() {
   }, []);
 
   return (
-    <div>
+    <div style={{ padding: "40px" }}>
       <h1>Planejamento</h1>
 
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
-        events={events}
+        events={[
+          { title: "Teste 1", date: "2026-03-02" },
+          { title: "Teste 2", date: "2026-03-03" },
+        ]}
       />
     </div>
   );

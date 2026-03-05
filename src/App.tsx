@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Websites from "./pages/Websites";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   return (
@@ -31,10 +32,10 @@ function App() {
         {/* Fora do layout */}
 
         <Route
-          path="/dashboard"
+          path="/usedashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <UserDashboard />
             </ProtectedRoute>
           }
         />

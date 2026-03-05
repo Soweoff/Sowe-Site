@@ -6,6 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 interface Event {
   title: string;
   date: string;
+  backgroundColor?: string;
 }
 
 export default function UserDashboard() {
@@ -17,10 +18,33 @@ export default function UserDashboard() {
 
       const tasks = res.data?.data?.boards?.[0]?.items_page?.items || [];
 
-      const formattedEvents = tasks.map((task: any) => ({
-        title: task.name,
-        date: "2026-03-02",
-      }));
+      const formattedEvents = tasks.map((task: any) => {
+        const dateColumn = task.column_values?.find(
+          (col: any) => col.id === "date",
+        );
+
+        const statusColumn = task.column_values?.find(
+          (col: any) => col.id === "status",
+        );
+
+        const date = dateColumn?.text;
+
+        let color = "#6c63ff";
+
+        if (statusColumn?.text === "Feito") {
+          color = "#22c55e";
+        } else if (statusColumn?.text === "Em andamento") {
+          color = "#f59e0b";
+        } else if (statusColumn?.text === "Não iniciado") {
+          color = "#64748b";
+        }
+
+        return {
+          title: task.name,
+          date: date,
+          backgroundColor: color,
+        };
+      });
 
       setEvents(formattedEvents);
     }
@@ -36,6 +60,13 @@ export default function UserDashboard() {
         <FullCalendar
           plugins={[dayGridPlugin]}
           initialView="dayGridMonth"
+          height="auto"
+          dayMaxEvents={3}
+          headerToolbar={{
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth",
+          }}
           events={events}
         />
       </div>

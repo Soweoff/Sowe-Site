@@ -32,7 +32,7 @@ function App() {
         {/* Fora do layout */}
 
         <Route
-          path="/usedashboard"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <UserDashboard />

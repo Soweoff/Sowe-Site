@@ -12,25 +12,34 @@ interface Event {
 
 export default function UserDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadTasks() {
-      const res = await api.get("/monday/tasks");
+      try {
+        const res = await api.get("/monday/tasks");
 
-      console.log("Monday response:", res.data);
+        const tasks = res.data?.data?.boards?.[0]?.items_page?.items || [];
 
-      const tasks = res.data?.data?.boards?.[0]?.items_page?.items || [];
+        const formattedEvents = tasks.map((task: any) => ({
+          title: task.name,
+          date: "2026-03-02",
+        }));
 
-      const formattedEvents = tasks.map((task: any) => ({
-        title: task.name,
-        date: "2026-03-02",
-      }));
-
-      setEvents(formattedEvents);
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("Erro ao carregar tarefas", error);
+      } finally {
+        setLoading(false);
+      }
     }
 
     loadTasks();
   }, []);
+
+  if (loading) {
+    return <p style={{ padding: "40px" }}>Carregando tarefas...</p>;
+  }
 
   return (
     <div style={{ padding: "40px" }}>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 
 import Home from "./pages/Home";
@@ -16,37 +16,39 @@ import UserDashboard from "./pages/UserDashboard";
 function App() {
   return (
     <BrowserRouter>
-      <Route element={<Layout />}>
-        {/* Públicas */}
-        <Route path="/" element={<Home />} />
-        <Route path="/youtube" element={<Youtube />} />
-        <Route path="/cs2" element={<CS2 />} />
-        <Route path="/edition" element={<Edition />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/websites" element={<Websites />} />
+      <Routes>
+        <Route element={<Layout />}>
+          {/* Públicas */}
+          <Route path="/" element={<Home />} />
+          <Route path="/youtube" element={<Youtube />} />
+          <Route path="/cs2" element={<CS2 />} />
+          <Route path="/edition" element={<Edition />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/websites" element={<Websites />} />
 
-        {/* Dashboard USER */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
+          {/* Dashboard USER */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Dashboard ADMIN */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Route>
+          {/* Dashboard ADMIN */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }

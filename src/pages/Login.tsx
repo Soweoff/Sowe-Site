@@ -15,8 +15,21 @@ export default function Login() {
 
     try {
       setLoading(true);
+
       await login(email, password);
-      navigate("/dashboard");
+
+      // pega role do localStorage
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        const decoded: any = JSON.parse(atob(token.split(".")[1]));
+
+        if (decoded.role === "ADMIN") {
+          navigate("/admin");
+        } else {
+          navigate("/dashboard");
+        }
+      }
     } catch (error) {
       alert("Email ou senha inválidos");
     } finally {

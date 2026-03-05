@@ -15,6 +15,8 @@ export default function UserDashboard() {
     async function loadTasks() {
       const res = await api.get("/monday/tasks");
 
+      console.log("Monday response:", res.data);
+
       const tasks = res.data.data.boards[0].items_page.items;
 
       const formattedEvents = tasks.map((task: any) => ({

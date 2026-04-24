@@ -21,8 +21,9 @@ export default function Dashboard() {
 
   // Estados dos Modais do Admin
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false); // Agora serve para Criar e Editar
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [editEventId, setEditEventId] = useState<string | null>(null); // Guarda o ID do evento que está sendo editado
 
   // Estados do Formulário Base
   const [title, setTitle] = useState("");
@@ -60,6 +61,13 @@ export default function Dashboard() {
     loadTasks();
   }, []);
 
+  // --- Função auxiliar para formatar a data para os inputs <input type="datetime-local"> ---
+  const toLocalDatetime = (dateObj: Date | null) => {
+    if (!dateObj) return "";
+    const tzoffset = dateObj.getTimezoneOffset() * 60000;
+    return new Date(dateObj.getTime() - tzoffset).toISOString().slice(0, 16);
+  };
+
   const handleEventClick = (clickInfo: any) => {
     const event = clickInfo.event;
     const startDate = new Date(event.start);
@@ -80,20 +88,53 @@ export default function Dashboard() {
       description: event.extendedProps.description,
       status: event.extendedProps.status || "Agendado",
       color: event.backgroundColor,
+      rawStart: toLocalDatetime(event.start),
+      rawEnd: toLocalDatetime(event.end || event.start), // Se não tiver data final, usa a inicial
     });
     setIsViewModalOpen(true);
   };
 
-  const handleCreateEvent = async (e: React.FormEvent) => {
+  // --- Botão "Novo Agendamento" ---
+  const openCreateModal = () => {
+    setEditEventId(null);
+    setTitle("");
+    setStart("");
+    setEnd("");
+    setDescription("");
+    setStatus("Não iniciado");
+    setIsRecurring(false);
+    setRepeatUntil("");
+    setDaysOfWeek([]);
+    setIsFormModalOpen(true);
+  };
+
+  // --- Botão "Editar" dentro do visualizador ---
+  const openEditModal = () => {
+    setIsViewModalOpen(false); // Fecha o visualizador
+    setEditEventId(selectedEvent.id); // Define que estamos em modo edição
+
+    // Preenche os campos com os dados daquele evento
+    setTitle(selectedEvent.title);
+    setStart(selectedEvent.rawStart);
+    setEnd(selectedEvent.rawEnd);
+    setDescription(selectedEvent.description);
+    setStatus(selectedEvent.status);
+
+    setIsRecurring(false); // Desativamos edição de repetição por simplicidade
+    setIsFormModalOpen(true); // Abre o formulário
+  };
+
+  // --- Salvar (Criar ou Atualizar) ---
+  const handleSaveEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isRecurring && daysOfWeek.length === 0) {
+    if (isRecurring && daysOfWeek.length === 0 && !editEventId) {
       alert("Selecione ao menos um dia da semana para repetir.");
       return;
     }
 
     setLoading(true);
     try {
-      await api.post("/zoho/events", {
+      const payload = {
         title,
         start,
         end,
@@ -102,36 +143,38 @@ export default function Dashboard() {
         isRecurring,
         repeatUntil,
         daysOfWeek,
-      });
-      setIsCreateModalOpen(false);
-      loadTasks();
+      };
 
-      // Limpar formulário
-      setTitle("");
-      setStart("");
-      setEnd("");
-      setDescription("");
-      setStatus("Não iniciado");
-      setIsRecurring(false);
-      setRepeatUntil("");
-      setDaysOfWeek([]);
+      if (editEventId) {
+        await api.put(`/zoho/events/${editEventId}`, payload); // Atualiza existente
+      } else {
+        await api.post("/zoho/events", payload); // Cria novo
+      }
+
+      setIsFormModalOpen(false);
+      loadTasks();
     } catch (error) {
-      alert("Erro ao criar evento.");
+      alert("Erro ao salvar o evento.");
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
+  // --- Deletar ---
   const handleDeleteEvent = async () => {
-    if (!window.confirm("Tem certeza que deseja deletar este agendamento?"))
+    if (
+      !window.confirm(
+        "Tem certeza que deseja deletar este agendamento? Esta ação não pode ser desfeita.",
+      )
+    )
       return;
     try {
       await api.delete(`/zoho/events/${selectedEvent.id}`);
       setIsViewModalOpen(false);
-      loadTasks();
+      loadTasks(); // Atualiza a tela
     } catch (error) {
-      alert("Erro ao deletar evento.");
+      alert("Erro ao deletar o evento.");
     }
   };
 
@@ -175,7 +218,7 @@ export default function Dashboard() {
         >
           <h2>Gestão de Agendamentos</h2>
           <button
-            onClick={() => setIsCreateModalOpen(true)}
+            onClick={openCreateModal}
             style={{
               padding: "10px 20px",
               background: "#6c63ff",
@@ -266,16 +309,23 @@ export default function Dashboard() {
       <Users />
 
       {/* ==========================================
-          MODAL 1: CRIAR NOVO EVENTO
+          MODAL 1: FORMULÁRIO (CRIAR E EDITAR)
       ========================================== */}
-      {isCreateModalOpen && (
+      {isFormModalOpen && (
         <div
           style={modalOverlayStyle}
-          onClick={() => setIsCreateModalOpen(false)}
+          onClick={() => setIsFormModalOpen(false)}
         >
           <div style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
-            <div style={{ ...modalHeaderStyle, backgroundColor: "#6c63ff" }}>
-              <h2 style={{ margin: 0, color: "#fff" }}>Novo Agendamento</h2>
+            <div
+              style={{
+                ...modalHeaderStyle,
+                backgroundColor: editEventId ? "#f59e0b" : "#6c63ff",
+              }}
+            >
+              <h2 style={{ margin: 0, color: "#fff" }}>
+                {editEventId ? "Editar Agendamento" : "Novo Agendamento"}
+              </h2>
             </div>
 
             <div
@@ -285,7 +335,7 @@ export default function Dashboard() {
                 ...modalBodyStyle,
               }}
             >
-              <form onSubmit={handleCreateEvent}>
+              <form onSubmit={handleSaveEvent}>
                 <div style={{ marginBottom: "10px" }}>
                   <label>Título:</label>
                   <input
@@ -298,7 +348,7 @@ export default function Dashboard() {
                 </div>
 
                 <div style={{ marginBottom: "10px" }}>
-                  <label>Status inicial:</label>
+                  <label>Status:</label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
@@ -336,96 +386,98 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* AREA DE REPETIÇÃO (NOVO) */}
-                <div
-                  style={{
-                    marginBottom: "15px",
-                    padding: "12px",
-                    border: "1px solid #444",
-                    borderRadius: "8px",
-                    backgroundColor: "rgba(255,255,255,0.02)",
-                  }}
-                >
-                  <label
+                {/* OCULTA A REPETIÇÃO DURANTE A EDIÇÃO PARA EVITAR CONFLITOS */}
+                {!editEventId && (
+                  <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      cursor: "pointer",
-                      fontWeight: "bold",
+                      marginBottom: "15px",
+                      padding: "12px",
+                      border: "1px solid #444",
+                      borderRadius: "8px",
+                      backgroundColor: "rgba(255,255,255,0.02)",
                     }}
                   >
-                    <input
-                      type="checkbox"
-                      checked={isRecurring}
-                      onChange={(e) => setIsRecurring(e.target.checked)}
-                      style={{ width: "18px", height: "18px" }}
-                    />
-                    Repetir semanalmente?
-                  </label>
-
-                  {isRecurring && (
-                    <div
-                      style={{ marginTop: "15px", animation: "fadeIn 0.3s" }}
+                    <label
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                      }}
                     >
-                      <label style={{ fontSize: "0.9rem", color: "#ccc" }}>
-                        Quais dias da semana?
-                      </label>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "6px",
-                          marginTop: "8px",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {daysOptions.map((day) => (
-                          <button
-                            key={day.value}
-                            type="button"
-                            onClick={() => {
-                              setDaysOfWeek((prev) =>
-                                prev.includes(day.value)
-                                  ? prev.filter((d) => d !== day.value)
-                                  : [...prev, day.value],
-                              );
-                            }}
-                            style={{
-                              padding: "6px 10px",
-                              borderRadius: "6px",
-                              border: "none",
-                              cursor: "pointer",
-                              fontSize: "0.85rem",
-                              fontWeight: "bold",
-                              backgroundColor: daysOfWeek.includes(day.value)
-                                ? "#6c63ff"
-                                : "#3a3a48",
-                              color: daysOfWeek.includes(day.value)
-                                ? "#fff"
-                                : "#aaa",
-                              transition: "all 0.2s",
-                            }}
-                          >
-                            {day.label}
-                          </button>
-                        ))}
-                      </div>
+                      <input
+                        type="checkbox"
+                        checked={isRecurring}
+                        onChange={(e) => setIsRecurring(e.target.checked)}
+                        style={{ width: "18px", height: "18px" }}
+                      />
+                      Repetir semanalmente?
+                    </label>
 
-                      <div style={{ marginTop: "15px" }}>
+                    {isRecurring && (
+                      <div
+                        style={{ marginTop: "15px", animation: "fadeIn 0.3s" }}
+                      >
                         <label style={{ fontSize: "0.9rem", color: "#ccc" }}>
-                          Repetir até o dia:
+                          Quais dias da semana?
                         </label>
-                        <input
-                          type="date"
-                          value={repeatUntil}
-                          onChange={(e) => setRepeatUntil(e.target.value)}
-                          style={inputStyle}
-                          required={isRecurring}
-                        />
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "6px",
+                            marginTop: "8px",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {daysOptions.map((day) => (
+                            <button
+                              key={day.value}
+                              type="button"
+                              onClick={() => {
+                                setDaysOfWeek((prev) =>
+                                  prev.includes(day.value)
+                                    ? prev.filter((d) => d !== day.value)
+                                    : [...prev, day.value],
+                                );
+                              }}
+                              style={{
+                                padding: "6px 10px",
+                                borderRadius: "6px",
+                                border: "none",
+                                cursor: "pointer",
+                                fontSize: "0.85rem",
+                                fontWeight: "bold",
+                                backgroundColor: daysOfWeek.includes(day.value)
+                                  ? "#6c63ff"
+                                  : "#3a3a48",
+                                color: daysOfWeek.includes(day.value)
+                                  ? "#fff"
+                                  : "#aaa",
+                                transition: "all 0.2s",
+                              }}
+                            >
+                              {day.label}
+                            </button>
+                          ))}
+                        </div>
+
+                        <div style={{ marginTop: "15px" }}>
+                          <label style={{ fontSize: "0.9rem", color: "#ccc" }}>
+                            Repetir até o dia:
+                          </label>
+                          <input
+                            type="date"
+                            value={repeatUntil}
+                            onChange={(e) => setRepeatUntil(e.target.value)}
+                            style={inputStyle}
+                            required={isRecurring}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )}
 
                 <div style={{ marginBottom: "20px" }}>
                   <label>Descrição:</label>
@@ -452,7 +504,7 @@ export default function Dashboard() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setIsCreateModalOpen(false)}
+                    onClick={() => setIsFormModalOpen(false)}
                     style={{
                       ...closeButtonStyle,
                       backgroundColor: "#3a3a48",
@@ -539,7 +591,7 @@ export default function Dashboard() {
                     margin: 0,
                     flex: 1,
                   }}
-                  onClick={() => alert("Função de edição em construção!")}
+                  onClick={openEditModal}
                 >
                   ✏️ Editar
                 </button>

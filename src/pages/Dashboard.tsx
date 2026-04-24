@@ -19,16 +19,33 @@ export default function Dashboard() {
   const { logout } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
 
+  // Estados dos Modais do Admin
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
+  // Estados do Formulário Base
   const [title, setTitle] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("Não iniciado"); // Valor inicial
+  const [status, setStatus] = useState("Não iniciado");
   const [loading, setLoading] = useState(false);
+
+  // Estados de Recorrência
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [repeatUntil, setRepeatUntil] = useState("");
+  const [daysOfWeek, setDaysOfWeek] = useState<string[]>([]);
+
+  const daysOptions = [
+    { label: "Seg", value: "MO" },
+    { label: "Ter", value: "TU" },
+    { label: "Qua", value: "WE" },
+    { label: "Qui", value: "TH" },
+    { label: "Sex", value: "FR" },
+    { label: "Sáb", value: "SA" },
+    { label: "Dom", value: "SU" },
+  ];
 
   async function loadTasks() {
     try {
@@ -61,7 +78,7 @@ export default function Dashboard() {
       date: dateFormatted,
       time: timeFormatted,
       description: event.extendedProps.description,
-      status: event.extendedProps.status || "Agendado", // Resgata o status
+      status: event.extendedProps.status || "Agendado",
       color: event.backgroundColor,
     });
     setIsViewModalOpen(true);
@@ -69,6 +86,11 @@ export default function Dashboard() {
 
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isRecurring && daysOfWeek.length === 0) {
+      alert("Selecione ao menos um dia da semana para repetir.");
+      return;
+    }
+
     setLoading(true);
     try {
       await api.post("/zoho/events", {
@@ -77,14 +99,22 @@ export default function Dashboard() {
         end,
         description,
         status,
+        isRecurring,
+        repeatUntil,
+        daysOfWeek,
       });
       setIsCreateModalOpen(false);
       loadTasks();
+
+      // Limpar formulário
       setTitle("");
       setStart("");
       setEnd("");
       setDescription("");
       setStatus("Não iniciado");
+      setIsRecurring(false);
+      setRepeatUntil("");
+      setDaysOfWeek([]);
     } catch (error) {
       alert("Erro ao criar evento.");
       console.error(error);
@@ -235,7 +265,9 @@ export default function Dashboard() {
       <hr style={{ borderColor: "#333", margin: "40px 0" }} />
       <Users />
 
-      {/* MODAL 1: CRIAR */}
+      {/* ==========================================
+          MODAL 1: CRIAR NOVO EVENTO
+      ========================================== */}
       {isCreateModalOpen && (
         <div
           style={modalOverlayStyle}
@@ -246,99 +278,200 @@ export default function Dashboard() {
               <h2 style={{ margin: 0, color: "#fff" }}>Novo Agendamento</h2>
             </div>
 
-            <form onSubmit={handleCreateEvent} style={modalBodyStyle}>
-              <div style={{ marginBottom: "10px" }}>
-                <label>Título da Entrega:</label>
-                <input
-                  type="text"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  style={inputStyle}
-                />
-              </div>
-
-              <div style={{ marginBottom: "10px" }}>
-                <label>Status:</label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  style={inputStyle}
-                >
-                  <option value="Não iniciado">Não iniciado</option>
-                  <option value="Em andamento">Em andamento</option>
-                  <option value="Feito">Feito</option>
-                  <option value="Agendado">Agendado</option>
-                </select>
-              </div>
-
-              <div
-                style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
-              >
-                <div style={{ flex: 1 }}>
-                  <label>Início:</label>
+            <div
+              style={{
+                maxHeight: "75vh",
+                overflowY: "auto",
+                ...modalBodyStyle,
+              }}
+            >
+              <form onSubmit={handleCreateEvent}>
+                <div style={{ marginBottom: "10px" }}>
+                  <label>Título:</label>
                   <input
-                    type="datetime-local"
+                    type="text"
                     required
-                    value={start}
-                    onChange={(e) => setStart(e.target.value)}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     style={inputStyle}
                   />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <label>Fim:</label>
-                  <input
-                    type="datetime-local"
-                    required
-                    value={end}
-                    onChange={(e) => setEnd(e.target.value)}
+
+                <div style={{ marginBottom: "10px" }}>
+                  <label>Status inicial:</label>
+                  <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    style={inputStyle}
+                  >
+                    <option value="Não iniciado">Não iniciado</option>
+                    <option value="Em andamento">Em andamento</option>
+                    <option value="Feito">Feito</option>
+                    <option value="Agendado">Agendado</option>
+                  </select>
+                </div>
+
+                <div
+                  style={{ display: "flex", gap: "10px", marginBottom: "15px" }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <label>Início:</label>
+                    <input
+                      type="datetime-local"
+                      required
+                      value={start}
+                      onChange={(e) => setStart(e.target.value)}
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label>Fim:</label>
+                    <input
+                      type="datetime-local"
+                      required
+                      value={end}
+                      onChange={(e) => setEnd(e.target.value)}
+                      style={inputStyle}
+                    />
+                  </div>
+                </div>
+
+                {/* AREA DE REPETIÇÃO (NOVO) */}
+                <div
+                  style={{
+                    marginBottom: "15px",
+                    padding: "12px",
+                    border: "1px solid #444",
+                    borderRadius: "8px",
+                    backgroundColor: "rgba(255,255,255,0.02)",
+                  }}
+                >
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isRecurring}
+                      onChange={(e) => setIsRecurring(e.target.checked)}
+                      style={{ width: "18px", height: "18px" }}
+                    />
+                    Repetir semanalmente?
+                  </label>
+
+                  {isRecurring && (
+                    <div
+                      style={{ marginTop: "15px", animation: "fadeIn 0.3s" }}
+                    >
+                      <label style={{ fontSize: "0.9rem", color: "#ccc" }}>
+                        Quais dias da semana?
+                      </label>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "6px",
+                          marginTop: "8px",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {daysOptions.map((day) => (
+                          <button
+                            key={day.value}
+                            type="button"
+                            onClick={() => {
+                              setDaysOfWeek((prev) =>
+                                prev.includes(day.value)
+                                  ? prev.filter((d) => d !== day.value)
+                                  : [...prev, day.value],
+                              );
+                            }}
+                            style={{
+                              padding: "6px 10px",
+                              borderRadius: "6px",
+                              border: "none",
+                              cursor: "pointer",
+                              fontSize: "0.85rem",
+                              fontWeight: "bold",
+                              backgroundColor: daysOfWeek.includes(day.value)
+                                ? "#6c63ff"
+                                : "#3a3a48",
+                              color: daysOfWeek.includes(day.value)
+                                ? "#fff"
+                                : "#aaa",
+                              transition: "all 0.2s",
+                            }}
+                          >
+                            {day.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div style={{ marginTop: "15px" }}>
+                        <label style={{ fontSize: "0.9rem", color: "#ccc" }}>
+                          Repetir até o dia:
+                        </label>
+                        <input
+                          type="date"
+                          value={repeatUntil}
+                          onChange={(e) => setRepeatUntil(e.target.value)}
+                          style={inputStyle}
+                          required={isRecurring}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ marginBottom: "20px" }}>
+                  <label>Descrição:</label>
+                  <textarea
+                    rows={2}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     style={inputStyle}
                   />
                 </div>
-              </div>
 
-              <div style={{ marginBottom: "20px" }}>
-                <label>Descrição:</label>
-                <textarea
-                  rows={2}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  style={inputStyle}
-                />
-              </div>
-
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  style={{
-                    ...closeButtonStyle,
-                    backgroundColor: "#22c55e",
-                    margin: 0,
-                    flex: 1,
-                  }}
-                >
-                  {loading ? "Salvando..." : "Salvar no Zoho"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsCreateModalOpen(false)}
-                  style={{
-                    ...closeButtonStyle,
-                    backgroundColor: "#3a3a48",
-                    margin: 0,
-                    flex: 1,
-                  }}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      ...closeButtonStyle,
+                      backgroundColor: "#22c55e",
+                      margin: 0,
+                      flex: 1,
+                    }}
+                  >
+                    {loading ? "Salvando..." : "Salvar no Zoho"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsCreateModalOpen(false)}
+                    style={{
+                      ...closeButtonStyle,
+                      backgroundColor: "#3a3a48",
+                      margin: 0,
+                      flex: 1,
+                    }}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* MODAL 2: VER/EDITAR/DELETAR */}
+      {/* ==========================================
+          MODAL 2: VER / EDITAR / DELETAR EVENTO
+      ========================================== */}
       {isViewModalOpen && selectedEvent && (
         <div
           style={modalOverlayStyle}
@@ -357,7 +490,6 @@ export default function Dashboard() {
             </div>
 
             <div style={modalBodyStyle}>
-              {/* STATUS BADGE */}
               <div
                 style={{
                   display: "inline-block",
@@ -453,7 +585,7 @@ const modalOverlayStyle: React.CSSProperties = {
 const modalContentStyle: React.CSSProperties = {
   backgroundColor: "#1e1e24",
   width: "90%",
-  maxWidth: "400px",
+  maxWidth: "450px",
   borderRadius: "12px",
   overflow: "hidden",
   boxShadow: "0 10px 25px rgba(0,0,0,0.5)",

@@ -4,8 +4,10 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 
 interface Event {
+  id?: string;
   title: string;
-  date: string;
+  start: string; // FullCalendar usa 'start' e 'end' (nosso backend já envia assim)
+  end?: string;
   backgroundColor?: string;
 }
 
@@ -14,44 +16,13 @@ export default function UserDashboard() {
 
   useEffect(() => {
     async function loadTasks() {
-      const res = await api.get("/monday/tasks");
-
-      const tasks = res.data?.data?.boards?.[0]?.items_page?.items || [];
-
-      const formattedEvents = tasks
-        .map((task: any) => {
-          const dateColumn = task.column_values?.find(
-            (col: any) => col.id === "date",
-          );
-
-          const statusColumn = task.column_values?.find(
-            (col: any) => col.id === "status",
-          );
-
-          let date = null;
-
-          if (dateColumn?.value) {
-            const parsed = JSON.parse(dateColumn.value);
-            date = parsed.date;
-          }
-
-          if (!date) return null;
-
-          let color = "#6c63ff";
-
-          if (statusColumn?.text === "Feito") color = "#22c55e";
-          if (statusColumn?.text === "Em andamento") color = "#f59e0b";
-          if (statusColumn?.text === "Não iniciado") color = "#64748b";
-
-          return {
-            title: task.name,
-            date,
-            backgroundColor: color,
-          };
-        })
-        .filter(Boolean);
-
-      setEvents(formattedEvents);
+      try {
+        const res = await api.get("/zoho/events");
+        // O backend do NestJS já mandou exatamente no formato que o calendário precisa!
+        setEvents(res.data);
+      } catch (error) {
+        console.error("Erro ao carregar os eventos do calendário:", error);
+      }
     }
 
     loadTasks();

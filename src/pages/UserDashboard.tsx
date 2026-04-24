@@ -76,7 +76,6 @@ export default function UserDashboard() {
           }}
           events={events}
           eventClick={handleEventClick} // <-- ATIVA O CLIQUE NO EVENTO
-          eventCursor="pointer" // Muda o mouse para uma "mãozinha" ao passar por cima
         />
       </div>
 

@@ -12,25 +12,24 @@ interface Event {
   end?: string;
   backgroundColor?: string;
   description?: string;
+  status?: string;
 }
 
 export default function Dashboard() {
   const { logout } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
 
-  // Estados dos Modais do Admin
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
-  // Estados do Formulário de Novo Evento
   const [title, setTitle] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("Não iniciado"); // Valor inicial
   const [loading, setLoading] = useState(false);
 
-  // Carregar eventos do Zoho
   async function loadTasks() {
     try {
       const res = await api.get("/zoho/events");
@@ -44,9 +43,6 @@ export default function Dashboard() {
     loadTasks();
   }, []);
 
-  // --- AÇÕES DO CALENDÁRIO ---
-
-  // 1. Abrir modal de detalhes ao clicar no evento
   const handleEventClick = (clickInfo: any) => {
     const event = clickInfo.event;
     const startDate = new Date(event.start);
@@ -65,24 +61,30 @@ export default function Dashboard() {
       date: dateFormatted,
       time: timeFormatted,
       description: event.extendedProps.description,
+      status: event.extendedProps.status || "Agendado", // Resgata o status
       color: event.backgroundColor,
     });
     setIsViewModalOpen(true);
   };
 
-  // 2. Enviar os dados do novo evento para o NestJS
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post("/zoho/events", { title, start, end, description });
+      await api.post("/zoho/events", {
+        title,
+        start,
+        end,
+        description,
+        status,
+      });
       setIsCreateModalOpen(false);
-      loadTasks(); // Recarrega o calendário automaticamente
-      // Limpa o formulário
+      loadTasks();
       setTitle("");
       setStart("");
       setEnd("");
       setDescription("");
+      setStatus("Não iniciado");
     } catch (error) {
       alert("Erro ao criar evento.");
       console.error(error);
@@ -91,15 +93,13 @@ export default function Dashboard() {
     }
   };
 
-  // 3. Deletar evento
   const handleDeleteEvent = async () => {
     if (!window.confirm("Tem certeza que deseja deletar este agendamento?"))
       return;
-
     try {
       await api.delete(`/zoho/events/${selectedEvent.id}`);
       setIsViewModalOpen(false);
-      loadTasks(); // Recarrega o calendário
+      loadTasks();
     } catch (error) {
       alert("Erro ao deletar evento.");
     }
@@ -160,6 +160,63 @@ export default function Dashboard() {
           </button>
         </div>
 
+        {/* LEGENDA DE CORES */}
+        <div
+          style={{
+            display: "flex",
+            gap: "15px",
+            marginBottom: "15px",
+            fontSize: "0.9rem",
+            color: "#ccc",
+            flexWrap: "wrap",
+          }}
+        >
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#64748b",
+              }}
+            ></div>{" "}
+            Não iniciado
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#f59e0b",
+              }}
+            ></div>{" "}
+            Em andamento
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#22c55e",
+              }}
+            ></div>{" "}
+            Feito
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#6c63ff",
+              }}
+            ></div>{" "}
+            Agendado
+          </span>
+        </div>
+
         <FullCalendar
           plugins={[dayGridPlugin]}
           initialView="dayGridMonth"
@@ -176,13 +233,9 @@ export default function Dashboard() {
       </div>
 
       <hr style={{ borderColor: "#333", margin: "40px 0" }} />
-
-      {/* Tabela de Usuários na mesma tela */}
       <Users />
 
-      {/* ==========================================
-          MODAL 1: CRIAR NOVO EVENTO
-      ========================================== */}
+      {/* MODAL 1: CRIAR */}
       {isCreateModalOpen && (
         <div
           style={modalOverlayStyle}
@@ -204,30 +257,50 @@ export default function Dashboard() {
                   style={inputStyle}
                 />
               </div>
+
               <div style={{ marginBottom: "10px" }}>
-                <label>Data/Hora de Início:</label>
-                <input
-                  type="datetime-local"
-                  required
-                  value={start}
-                  onChange={(e) => setStart(e.target.value)}
+                <label>Status:</label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
                   style={inputStyle}
-                />
+                >
+                  <option value="Não iniciado">Não iniciado</option>
+                  <option value="Em andamento">Em andamento</option>
+                  <option value="Feito">Feito</option>
+                  <option value="Agendado">Agendado</option>
+                </select>
               </div>
-              <div style={{ marginBottom: "10px" }}>
-                <label>Data/Hora de Fim:</label>
-                <input
-                  type="datetime-local"
-                  required
-                  value={end}
-                  onChange={(e) => setEnd(e.target.value)}
-                  style={inputStyle}
-                />
+
+              <div
+                style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+              >
+                <div style={{ flex: 1 }}>
+                  <label>Início:</label>
+                  <input
+                    type="datetime-local"
+                    required
+                    value={start}
+                    onChange={(e) => setStart(e.target.value)}
+                    style={inputStyle}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label>Fim:</label>
+                  <input
+                    type="datetime-local"
+                    required
+                    value={end}
+                    onChange={(e) => setEnd(e.target.value)}
+                    style={inputStyle}
+                  />
+                </div>
               </div>
+
               <div style={{ marginBottom: "20px" }}>
                 <label>Descrição:</label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   style={inputStyle}
@@ -265,9 +338,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ==========================================
-          MODAL 2: VER / EDITAR / DELETAR EVENTO
-      ========================================== */}
+      {/* MODAL 2: VER/EDITAR/DELETAR */}
       {isViewModalOpen && selectedEvent && (
         <div
           style={modalOverlayStyle}
@@ -286,10 +357,26 @@ export default function Dashboard() {
             </div>
 
             <div style={modalBodyStyle}>
-              <p>
+              {/* STATUS BADGE */}
+              <div
+                style={{
+                  display: "inline-block",
+                  padding: "4px 10px",
+                  backgroundColor: selectedEvent.color,
+                  color: "#fff",
+                  borderRadius: "12px",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  marginBottom: "15px",
+                }}
+              >
+                Status: {selectedEvent.status}
+              </div>
+
+              <p style={{ margin: "5px 0" }}>
                 <strong>📅 Data:</strong> {selectedEvent.date}
               </p>
-              <p>
+              <p style={{ margin: "5px 0" }}>
                 <strong>⏰ Horário:</strong> {selectedEvent.time}
               </p>
 
@@ -310,7 +397,6 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              {/* Botões de Ação do Admin */}
               <div
                 style={{ display: "flex", gap: "10px", marginBottom: "15px" }}
               >
@@ -337,7 +423,6 @@ export default function Dashboard() {
                   🗑️ Deletar
                 </button>
               </div>
-
               <button
                 style={closeButtonStyle}
                 onClick={() => setIsViewModalOpen(false)}
@@ -352,7 +437,6 @@ export default function Dashboard() {
   );
 }
 
-// --- CSS INLINE ---
 const modalOverlayStyle: React.CSSProperties = {
   position: "fixed",
   top: 0,
@@ -366,7 +450,6 @@ const modalOverlayStyle: React.CSSProperties = {
   alignItems: "center",
   zIndex: 1000,
 };
-
 const modalContentStyle: React.CSSProperties = {
   backgroundColor: "#1e1e24",
   width: "90%",
@@ -377,7 +460,6 @@ const modalContentStyle: React.CSSProperties = {
   border: "1px solid #333",
   color: "#fff",
 };
-
 const modalHeaderStyle: React.CSSProperties = {
   padding: "15px 20px",
   textAlign: "center",
@@ -387,7 +469,6 @@ const modalBodyStyle: React.CSSProperties = {
   fontSize: "1rem",
   lineHeight: "1.5",
 };
-
 const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "10px",
@@ -398,7 +479,6 @@ const inputStyle: React.CSSProperties = {
   color: "#fff",
   boxSizing: "border-box",
 };
-
 const closeButtonStyle: React.CSSProperties = {
   display: "block",
   width: "100%",

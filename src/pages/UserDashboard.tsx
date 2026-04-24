@@ -10,12 +10,12 @@ interface Event {
   end?: string;
   backgroundColor?: string;
   description?: string;
+  status?: string;
 }
 
 export default function UserDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
 
-  // Estados para controlar o Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
@@ -31,15 +31,11 @@ export default function UserDashboard() {
     loadTasks();
   }, []);
 
-  // Função disparada ao clicar em um evento no calendário
   const handleEventClick = (clickInfo: any) => {
     const event = clickInfo.event;
 
-    // Formatando a data e a hora para o padrão brasileiro
     const startDate = new Date(event.start);
     const dateFormatted = startDate.toLocaleDateString("pt-BR");
-
-    // Pega a hora. Se for um evento de "dia inteiro", o horário vem zerado
     const timeFormatted =
       startDate.getHours() === 0 && startDate.getMinutes() === 0
         ? "Dia todo"
@@ -53,6 +49,7 @@ export default function UserDashboard() {
       date: dateFormatted,
       time: timeFormatted,
       description: event.extendedProps.description,
+      status: event.extendedProps.status || "Agendado", // Resgata o status
       color: event.backgroundColor,
     });
 
@@ -64,6 +61,63 @@ export default function UserDashboard() {
       <h1 className="dashboard-title">Planejamento de Entregas</h1>
 
       <div className="calendar-wrapper">
+        {/* LEGENDA DE CORES */}
+        <div
+          style={{
+            display: "flex",
+            gap: "15px",
+            marginBottom: "15px",
+            fontSize: "0.9rem",
+            color: "#ccc",
+            flexWrap: "wrap",
+          }}
+        >
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#64748b",
+              }}
+            ></div>{" "}
+            Não iniciado
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#f59e0b",
+              }}
+            ></div>{" "}
+            Em andamento
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#22c55e",
+              }}
+            ></div>{" "}
+            Feito
+          </span>
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "#6c63ff",
+              }}
+            ></div>{" "}
+            Agendado
+          </span>
+        </div>
+
         <FullCalendar
           plugins={[dayGridPlugin]}
           initialView="dayGridMonth"
@@ -75,7 +129,7 @@ export default function UserDashboard() {
             right: "dayGridMonth",
           }}
           events={events}
-          eventClick={handleEventClick} // <-- ATIVA O CLIQUE NO EVENTO
+          eventClick={handleEventClick}
         />
       </div>
 
@@ -95,10 +149,26 @@ export default function UserDashboard() {
             </div>
 
             <div style={modalBodyStyle}>
-              <p>
+              {/* STATUS BADGE */}
+              <div
+                style={{
+                  display: "inline-block",
+                  padding: "4px 10px",
+                  backgroundColor: selectedEvent.color,
+                  color: "#fff",
+                  borderRadius: "12px",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  marginBottom: "15px",
+                }}
+              >
+                Status: {selectedEvent.status}
+              </div>
+
+              <p style={{ margin: "5px 0" }}>
                 <strong>📅 Data:</strong> {selectedEvent.date}
               </p>
-              <p>
+              <p style={{ margin: "5px 0" }}>
                 <strong>⏰ Horário:</strong> {selectedEvent.time}
               </p>
 
@@ -108,6 +178,7 @@ export default function UserDashboard() {
                   padding: "10px",
                   backgroundColor: "#2a2a36",
                   borderRadius: "8px",
+                  marginBottom: "20px",
                 }}
               >
                 <p style={{ margin: 0, fontSize: "0.9rem", color: "#ccc" }}>
@@ -117,14 +188,14 @@ export default function UserDashboard() {
                   {selectedEvent.description}
                 </p>
               </div>
-            </div>
 
-            <button
-              style={closeButtonStyle}
-              onClick={() => setIsModalOpen(false)}
-            >
-              Fechar
-            </button>
+              <button
+                style={closeButtonStyle}
+                onClick={() => setIsModalOpen(false)}
+              >
+                Fechar
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -132,7 +203,7 @@ export default function UserDashboard() {
   );
 }
 
-// --- CSS INLINE PARA O MODAL (Para funcionar perfeitamente com seu tema escuro) ---
+// --- CSS INLINE ---
 const modalOverlayStyle: React.CSSProperties = {
   position: "fixed",
   top: 0,
@@ -146,7 +217,6 @@ const modalOverlayStyle: React.CSSProperties = {
   alignItems: "center",
   zIndex: 1000,
 };
-
 const modalContentStyle: React.CSSProperties = {
   backgroundColor: "#1e1e24",
   width: "90%",
@@ -157,22 +227,18 @@ const modalContentStyle: React.CSSProperties = {
   border: "1px solid #333",
   color: "#fff",
 };
-
 const modalHeaderStyle: React.CSSProperties = {
   padding: "15px 20px",
   textAlign: "center",
 };
-
 const modalBodyStyle: React.CSSProperties = {
   padding: "20px",
   fontSize: "1rem",
   lineHeight: "1.5",
 };
-
 const closeButtonStyle: React.CSSProperties = {
   display: "block",
-  width: "calc(100% - 40px)",
-  margin: "0 auto 20px auto",
+  width: "100%",
   padding: "10px",
   backgroundColor: "#3a3a48",
   color: "#fff",

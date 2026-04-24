@@ -20,8 +20,8 @@ export default function Websites() {
       title: "Hotmart Área de Membros",
       description: "Área de membros personalizada para cursos online.",
       image:
-        "https://res.cloudinary.com/dvqbwddan/image/upload/v1772082969/Sowe-Site/Sites/TNK_Store_u5mv3k.jpg",
-      link: "https://tnkstore3.lojavirtualnuvem.com.br/",
+        "https://res.cloudinary.com/dvqbwddan/image/upload/v1777065423/Sowe-Site/Sites/Screenshot_1_cubrmy.jpg",
+      link: "https://hotmart.com/pt-br/club/sowe",
     },
   ];
 

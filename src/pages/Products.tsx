@@ -102,7 +102,7 @@ export default function Products() {
           {/* Produto 2 */}
           <div className="product-card">
             <img
-              src="https://asset.cloudinary.com/dvqbwddan/deb71bd5b464b0ccda2665fe7b404c41"
+              src="https://res.cloudinary.com/dvqbwddan/image/upload/v1777745790/Sowe-Site/ky3cmkih_gh13pq.jpg"
               alt="Assets"
             />
             <h3>Assets & Packs</h3>

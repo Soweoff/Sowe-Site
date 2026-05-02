@@ -101,7 +101,10 @@ export default function Products() {
 
           {/* Produto 2 */}
           <div className="product-card">
-            <img src="/IMG/products/assets.jpg" alt="Assets" />
+            <img
+              src="https://asset.cloudinary.com/dvqbwddan/deb71bd5b464b0ccda2665fe7b404c41"
+              alt="Assets"
+            />
             <h3>Assets & Packs</h3>
             <p>Packs de efeitos, overlays e elementos visuais.</p>
             <a href="#" className="product-button">

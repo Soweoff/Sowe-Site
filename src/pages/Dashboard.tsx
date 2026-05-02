@@ -240,9 +240,7 @@ export default function Dashboard() {
             <p style={{ color: "#ccc", margin: "0 0 10px" }}>
               Calendário ativo:{" "}
               <strong>
-                {selectedCalendar === "tnk_store"
-                  ? "TNK STORE"
-                  : "Meu calendário pessoal"}
+                {selectedCalendar === "tnk_store" ? "TNK STORE" : "Sowe Studio"}
               </strong>
             </p>
 
@@ -261,7 +259,7 @@ export default function Dashboard() {
               }}
             >
               <option value="tnk_store">TNK STORE</option>
-              <option value="personal">Meu calendário pessoal</option>
+              <option value="personal">Sowe Studio</option>
             </select>
           </div>
 

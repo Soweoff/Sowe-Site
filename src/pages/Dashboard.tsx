@@ -5,6 +5,8 @@ import Users from "./Users";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 
+type CalendarKey = "tnk_store" | "personal";
+
 interface Event {
   id?: string;
   title: string;
@@ -13,19 +15,22 @@ interface Event {
   backgroundColor?: string;
   description?: string;
   status?: string;
+  calendar?: CalendarKey;
 }
 
 export default function Dashboard() {
   const { logout } = useAuth();
+
+  const [selectedCalendar, setSelectedCalendar] =
+    useState<CalendarKey>("tnk_store");
+
   const [events, setEvents] = useState<Event[]>([]);
 
-  // Estados dos Modais do Admin
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false); // Agora serve para Criar e Editar
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const [editEventId, setEditEventId] = useState<string | null>(null); // Guarda o ID do evento que está sendo editado
+  const [editEventId, setEditEventId] = useState<string | null>(null);
 
-  // Estados do Formulário Base
   const [title, setTitle] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
@@ -33,7 +38,6 @@ export default function Dashboard() {
   const [status, setStatus] = useState("Não iniciado");
   const [loading, setLoading] = useState(false);
 
-  // Estados de Recorrência
   const [isRecurring, setIsRecurring] = useState(false);
   const [repeatUntil, setRepeatUntil] = useState("");
   const [daysOfWeek, setDaysOfWeek] = useState<string[]>([]);
@@ -50,7 +54,8 @@ export default function Dashboard() {
 
   async function loadTasks() {
     try {
-      const res = await api.get("/zoho/events");
+      setEvents([]);
+      const res = await api.get(`/zoho/events?calendar=${selectedCalendar}`);
       setEvents(res.data);
     } catch (error) {
       console.error("Erro ao carregar os eventos:", error);
@@ -59,18 +64,24 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadTasks();
-  }, []);
+  }, [selectedCalendar]);
 
-  // --- Função auxiliar para formatar a data para os inputs <input type="datetime-local"> ---
   const toLocalDatetime = (dateObj: Date | null) => {
     if (!dateObj) return "";
     const tzoffset = dateObj.getTimezoneOffset() * 60000;
     return new Date(dateObj.getTime() - tzoffset).toISOString().slice(0, 16);
   };
 
+  const getCalendarLabel = () => {
+    return selectedCalendar === "tnk_store"
+      ? "TNK STORE"
+      : "Calendário Pessoal";
+  };
+
   const handleEventClick = (clickInfo: any) => {
     const event = clickInfo.event;
     const startDate = new Date(event.start);
+
     const dateFormatted = startDate.toLocaleDateString("pt-BR");
     const timeFormatted =
       startDate.getHours() === 0 && startDate.getMinutes() === 0
@@ -88,13 +99,14 @@ export default function Dashboard() {
       description: event.extendedProps.description,
       status: event.extendedProps.status || "Agendado",
       color: event.backgroundColor,
+      calendar: selectedCalendar,
       rawStart: toLocalDatetime(event.start),
-      rawEnd: toLocalDatetime(event.end || event.start), // Se não tiver data final, usa a inicial
+      rawEnd: toLocalDatetime(event.end || event.start),
     });
+
     setIsViewModalOpen(true);
   };
 
-  // --- Botão "Novo Agendamento" ---
   const openCreateModal = () => {
     setEditEventId(null);
     setTitle("");
@@ -108,31 +120,30 @@ export default function Dashboard() {
     setIsFormModalOpen(true);
   };
 
-  // --- Botão "Editar" dentro do visualizador ---
   const openEditModal = () => {
-    setIsViewModalOpen(false); // Fecha o visualizador
-    setEditEventId(selectedEvent.id); // Define que estamos em modo edição
+    setIsViewModalOpen(false);
+    setEditEventId(selectedEvent.id);
 
-    // Preenche os campos com os dados daquele evento
     setTitle(selectedEvent.title);
     setStart(selectedEvent.rawStart);
     setEnd(selectedEvent.rawEnd);
     setDescription(selectedEvent.description);
     setStatus(selectedEvent.status);
 
-    setIsRecurring(false); // Desativamos edição de repetição por simplicidade
-    setIsFormModalOpen(true); // Abre o formulário
+    setIsRecurring(false);
+    setIsFormModalOpen(true);
   };
 
-  // --- Salvar (Criar ou Atualizar) ---
   const handleSaveEvent = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (isRecurring && daysOfWeek.length === 0 && !editEventId) {
       alert("Selecione ao menos um dia da semana para repetir.");
       return;
     }
 
     setLoading(true);
+
     try {
       const payload = {
         title,
@@ -146,13 +157,16 @@ export default function Dashboard() {
       };
 
       if (editEventId) {
-        await api.put(`/zoho/events/${editEventId}`, payload); // Atualiza existente
+        await api.put(
+          `/zoho/events/${editEventId}?calendar=${selectedCalendar}`,
+          payload,
+        );
       } else {
-        await api.post("/zoho/events", payload); // Cria novo
+        await api.post(`/zoho/events?calendar=${selectedCalendar}`, payload);
       }
 
       setIsFormModalOpen(false);
-      loadTasks();
+      await loadTasks();
     } catch (error) {
       alert("Erro ao salvar o evento.");
       console.error(error);
@@ -161,20 +175,24 @@ export default function Dashboard() {
     }
   };
 
-  // --- Deletar ---
   const handleDeleteEvent = async () => {
     if (
       !window.confirm(
         "Tem certeza que deseja deletar este agendamento? Esta ação não pode ser desfeita.",
       )
-    )
+    ) {
       return;
+    }
+
     try {
-      await api.delete(`/zoho/events/${selectedEvent.id}`);
+      await api.delete(
+        `/zoho/events/${selectedEvent.id}?calendar=${selectedCalendar}`,
+      );
       setIsViewModalOpen(false);
-      loadTasks(); // Atualiza a tela
+      await loadTasks();
     } catch (error) {
       alert("Erro ao deletar o evento.");
+      console.error(error);
     }
   };
 
@@ -189,9 +207,12 @@ export default function Dashboard() {
           justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "20px",
+          gap: "15px",
+          flexWrap: "wrap",
         }}
       >
         <h1 className="dashboard-title">Painel do Administrador</h1>
+
         <button
           onClick={logout}
           style={{
@@ -214,26 +235,53 @@ export default function Dashboard() {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "15px",
+            gap: "15px",
+            flexWrap: "wrap",
           }}
         >
-          <h2>Gestão de Agendamentos</h2>
-          <button
-            onClick={openCreateModal}
-            style={{
-              padding: "10px 20px",
-              background: "#6c63ff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            + Novo Agendamento
-          </button>
+          <div>
+            <h2 style={{ marginBottom: "8px" }}>Gestão de Agendamentos</h2>
+            <p style={{ margin: 0, color: "#aaa", fontSize: "0.9rem" }}>
+              Calendário ativo: <strong>{getCalendarLabel()}</strong>
+            </p>
+          </div>
+
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <select
+              value={selectedCalendar}
+              onChange={(e) =>
+                setSelectedCalendar(e.target.value as CalendarKey)
+              }
+              style={{
+                padding: "10px",
+                background: "#2a2a36",
+                color: "#fff",
+                border: "1px solid #444",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+            >
+              <option value="tnk_store">TNK STORE</option>
+              <option value="personal">Calendário Pessoal</option>
+            </select>
+
+            <button
+              onClick={openCreateModal}
+              style={{
+                padding: "10px 20px",
+                background: "#6c63ff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              + Novo Agendamento
+            </button>
+          </div>
         </div>
 
-        {/* LEGENDA DE CORES */}
         <div
           style={{
             display: "flex",
@@ -252,7 +300,7 @@ export default function Dashboard() {
                 borderRadius: "50%",
                 background: "#64748b",
               }}
-            ></div>{" "}
+            />
             Não iniciado
           </span>
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
@@ -263,7 +311,7 @@ export default function Dashboard() {
                 borderRadius: "50%",
                 background: "#f59e0b",
               }}
-            ></div>{" "}
+            />
             Em andamento
           </span>
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
@@ -274,7 +322,7 @@ export default function Dashboard() {
                 borderRadius: "50%",
                 background: "#22c55e",
               }}
-            ></div>{" "}
+            />
             Feito
           </span>
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
@@ -285,7 +333,7 @@ export default function Dashboard() {
                 borderRadius: "50%",
                 background: "#6c63ff",
               }}
-            ></div>{" "}
+            />
             Agendado
           </span>
         </div>
@@ -308,9 +356,6 @@ export default function Dashboard() {
       <hr style={{ borderColor: "#333", margin: "40px 0" }} />
       <Users />
 
-      {/* ==========================================
-          MODAL 1: FORMULÁRIO (CRIAR E EDITAR)
-      ========================================== */}
       {isFormModalOpen && (
         <div
           style={modalOverlayStyle}
@@ -326,6 +371,15 @@ export default function Dashboard() {
               <h2 style={{ margin: 0, color: "#fff" }}>
                 {editEventId ? "Editar Agendamento" : "Novo Agendamento"}
               </h2>
+              <p
+                style={{
+                  margin: "6px 0 0",
+                  color: "#fff",
+                  fontSize: "0.85rem",
+                }}
+              >
+                Calendário: {getCalendarLabel()}
+              </p>
             </div>
 
             <div
@@ -374,6 +428,7 @@ export default function Dashboard() {
                       style={inputStyle}
                     />
                   </div>
+
                   <div style={{ flex: 1 }}>
                     <label>Fim:</label>
                     <input
@@ -386,7 +441,6 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* OCULTA A REPETIÇÃO DURANTE A EDIÇÃO PARA EVITAR CONFLITOS */}
                 {!editEventId && (
                   <div
                     style={{
@@ -416,12 +470,11 @@ export default function Dashboard() {
                     </label>
 
                     {isRecurring && (
-                      <div
-                        style={{ marginTop: "15px", animation: "fadeIn 0.3s" }}
-                      >
+                      <div style={{ marginTop: "15px" }}>
                         <label style={{ fontSize: "0.9rem", color: "#ccc" }}>
                           Quais dias da semana?
                         </label>
+
                         <div
                           style={{
                             display: "flex",
@@ -454,7 +507,6 @@ export default function Dashboard() {
                                 color: daysOfWeek.includes(day.value)
                                   ? "#fff"
                                   : "#aaa",
-                                transition: "all 0.2s",
                               }}
                             >
                               {day.label}
@@ -502,6 +554,7 @@ export default function Dashboard() {
                   >
                     {loading ? "Salvando..." : "Salvar no Zoho"}
                   </button>
+
                   <button
                     type="button"
                     onClick={() => setIsFormModalOpen(false)}
@@ -521,9 +574,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ==========================================
-          MODAL 2: VER / EDITAR / DELETAR EVENTO
-      ========================================== */}
       {isViewModalOpen && selectedEvent && (
         <div
           style={modalOverlayStyle}
@@ -560,8 +610,13 @@ export default function Dashboard() {
               <p style={{ margin: "5px 0" }}>
                 <strong>📅 Data:</strong> {selectedEvent.date}
               </p>
+
               <p style={{ margin: "5px 0" }}>
                 <strong>⏰ Horário:</strong> {selectedEvent.time}
+              </p>
+
+              <p style={{ margin: "5px 0" }}>
+                <strong>🗓️ Calendário:</strong> {getCalendarLabel()}
               </p>
 
               <div
@@ -595,6 +650,7 @@ export default function Dashboard() {
                 >
                   ✏️ Editar
                 </button>
+
                 <button
                   style={{
                     ...closeButtonStyle,
@@ -607,6 +663,7 @@ export default function Dashboard() {
                   🗑️ Deletar
                 </button>
               </div>
+
               <button
                 style={closeButtonStyle}
                 onClick={() => setIsViewModalOpen(false)}
@@ -634,6 +691,7 @@ const modalOverlayStyle: React.CSSProperties = {
   alignItems: "center",
   zIndex: 1000,
 };
+
 const modalContentStyle: React.CSSProperties = {
   backgroundColor: "#1e1e24",
   width: "90%",
@@ -644,15 +702,18 @@ const modalContentStyle: React.CSSProperties = {
   border: "1px solid #333",
   color: "#fff",
 };
+
 const modalHeaderStyle: React.CSSProperties = {
   padding: "15px 20px",
   textAlign: "center",
 };
+
 const modalBodyStyle: React.CSSProperties = {
   padding: "20px",
   fontSize: "1rem",
   lineHeight: "1.5",
 };
+
 const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "10px",
@@ -663,6 +724,7 @@ const inputStyle: React.CSSProperties = {
   color: "#fff",
   boxSizing: "border-box",
 };
+
 const closeButtonStyle: React.CSSProperties = {
   display: "block",
   width: "100%",

@@ -3,6 +3,8 @@ import { api } from "../services/api";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 
+type CalendarKey = "tnk_store" | "personal";
+
 interface Event {
   id?: string;
   title: string;
@@ -11,10 +13,13 @@ interface Event {
   backgroundColor?: string;
   description?: string;
   status?: string;
+  calendar?: CalendarKey;
 }
 
 export default function UserDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [selectedCalendar, setSelectedCalendar] =
+    useState<CalendarKey>("tnk_store");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -22,20 +27,22 @@ export default function UserDashboard() {
   useEffect(() => {
     async function loadTasks() {
       try {
-        const res = await api.get("/zoho/events");
+        const res = await api.get(`/zoho/events?calendar=${selectedCalendar}`);
         setEvents(res.data);
       } catch (error) {
         console.error("Erro ao carregar os eventos:", error);
       }
     }
+
     loadTasks();
-  }, []);
+  }, [selectedCalendar]);
 
   const handleEventClick = (clickInfo: any) => {
     const event = clickInfo.event;
-
     const startDate = new Date(event.start);
+
     const dateFormatted = startDate.toLocaleDateString("pt-BR");
+
     const timeFormatted =
       startDate.getHours() === 0 && startDate.getMinutes() === 0
         ? "Dia todo"
@@ -49,7 +56,7 @@ export default function UserDashboard() {
       date: dateFormatted,
       time: timeFormatted,
       description: event.extendedProps.description,
-      status: event.extendedProps.status || "Agendado", // Resgata o status
+      status: event.extendedProps.status || "Agendado",
       color: event.backgroundColor,
     });
 
@@ -60,8 +67,29 @@ export default function UserDashboard() {
     <div className="dashboard-container" style={{ position: "relative" }}>
       <h1 className="dashboard-title">Planejamento de Entregas</h1>
 
+      <div style={{ marginBottom: "20px" }}>
+        <label style={{ color: "#ccc", marginRight: "10px" }}>
+          Calendário:
+        </label>
+
+        <select
+          value={selectedCalendar}
+          onChange={(e) => setSelectedCalendar(e.target.value as CalendarKey)}
+          style={{
+            padding: "10px",
+            background: "#2a2a36",
+            color: "#fff",
+            border: "1px solid #444",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          <option value="tnk_store">TNK STORE</option>
+          <option value="personal">Meu calendário pessoal</option>
+        </select>
+      </div>
+
       <div className="calendar-wrapper">
-        {/* LEGENDA DE CORES */}
         <div
           style={{
             display: "flex",
@@ -80,9 +108,10 @@ export default function UserDashboard() {
                 borderRadius: "50%",
                 background: "#64748b",
               }}
-            ></div>{" "}
+            />
             Não iniciado
           </span>
+
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <div
               style={{
@@ -91,9 +120,10 @@ export default function UserDashboard() {
                 borderRadius: "50%",
                 background: "#f59e0b",
               }}
-            ></div>{" "}
+            />
             Em andamento
           </span>
+
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <div
               style={{
@@ -102,9 +132,10 @@ export default function UserDashboard() {
                 borderRadius: "50%",
                 background: "#22c55e",
               }}
-            ></div>{" "}
+            />
             Feito
           </span>
+
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <div
               style={{
@@ -113,7 +144,7 @@ export default function UserDashboard() {
                 borderRadius: "50%",
                 background: "#6c63ff",
               }}
-            ></div>{" "}
+            />
             Agendado
           </span>
         </div>
@@ -133,7 +164,6 @@ export default function UserDashboard() {
         />
       </div>
 
-      {/* MODAL DE DETALHES DO EVENTO */}
       {isModalOpen && selectedEvent && (
         <div style={modalOverlayStyle} onClick={() => setIsModalOpen(false)}>
           <div style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
@@ -149,7 +179,6 @@ export default function UserDashboard() {
             </div>
 
             <div style={modalBodyStyle}>
-              {/* STATUS BADGE */}
               <div
                 style={{
                   display: "inline-block",
@@ -168,6 +197,7 @@ export default function UserDashboard() {
               <p style={{ margin: "5px 0" }}>
                 <strong>📅 Data:</strong> {selectedEvent.date}
               </p>
+
               <p style={{ margin: "5px 0" }}>
                 <strong>⏰ Horário:</strong> {selectedEvent.time}
               </p>
@@ -203,7 +233,6 @@ export default function UserDashboard() {
   );
 }
 
-// --- CSS INLINE ---
 const modalOverlayStyle: React.CSSProperties = {
   position: "fixed",
   top: 0,
@@ -217,6 +246,7 @@ const modalOverlayStyle: React.CSSProperties = {
   alignItems: "center",
   zIndex: 1000,
 };
+
 const modalContentStyle: React.CSSProperties = {
   backgroundColor: "#1e1e24",
   width: "90%",
@@ -227,15 +257,18 @@ const modalContentStyle: React.CSSProperties = {
   border: "1px solid #333",
   color: "#fff",
 };
+
 const modalHeaderStyle: React.CSSProperties = {
   padding: "15px 20px",
   textAlign: "center",
 };
+
 const modalBodyStyle: React.CSSProperties = {
   padding: "20px",
   fontSize: "1rem",
   lineHeight: "1.5",
 };
+
 const closeButtonStyle: React.CSSProperties = {
   display: "block",
   width: "100%",

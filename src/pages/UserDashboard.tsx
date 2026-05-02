@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import rrulePlugin from "@fullcalendar/rrule";
 
 type CalendarKey = "tnk_store" | "personal";
 
 interface Event {
   id?: string;
   title: string;
-  start: string;
+  start?: string;
   end?: string;
+  rrule?: string;
+  duration?: string;
   backgroundColor?: string;
+  borderColor?: string;
   description?: string;
   status?: string;
   calendar?: CalendarKey;
@@ -150,7 +154,7 @@ export default function UserDashboard() {
         </div>
 
         <FullCalendar
-          plugins={[dayGridPlugin]}
+          plugins={[dayGridPlugin, rrulePlugin]}
           initialView="dayGridMonth"
           height="auto"
           dayMaxEvents={3}

@@ -4,15 +4,19 @@ import { api } from "../services/api";
 import Users from "./Users";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import rrulePlugin from "@fullcalendar/rrule";
 
 type CalendarKey = "tnk_store" | "personal";
 
 interface Event {
   id?: string;
   title: string;
-  start: string;
+  start?: string;
   end?: string;
+  rrule?: string;
+  duration?: string;
   backgroundColor?: string;
+  borderColor?: string;
   description?: string;
   status?: string;
   calendar?: CalendarKey;
@@ -21,10 +25,9 @@ interface Event {
 export default function Dashboard() {
   const { logout } = useAuth();
 
+  const [events, setEvents] = useState<Event[]>([]);
   const [selectedCalendar, setSelectedCalendar] =
     useState<CalendarKey>("tnk_store");
-
-  const [events, setEvents] = useState<Event[]>([]);
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -54,7 +57,6 @@ export default function Dashboard() {
 
   async function loadTasks() {
     try {
-      setEvents([]);
       const res = await api.get(`/zoho/events?calendar=${selectedCalendar}`);
       setEvents(res.data);
     } catch (error) {
@@ -72,17 +74,12 @@ export default function Dashboard() {
     return new Date(dateObj.getTime() - tzoffset).toISOString().slice(0, 16);
   };
 
-  const getCalendarLabel = () => {
-    return selectedCalendar === "tnk_store"
-      ? "TNK STORE"
-      : "Calendário Pessoal";
-  };
-
   const handleEventClick = (clickInfo: any) => {
     const event = clickInfo.event;
     const startDate = new Date(event.start);
 
     const dateFormatted = startDate.toLocaleDateString("pt-BR");
+
     const timeFormatted =
       startDate.getHours() === 0 && startDate.getMinutes() === 0
         ? "Dia todo"
@@ -99,7 +96,6 @@ export default function Dashboard() {
       description: event.extendedProps.description,
       status: event.extendedProps.status || "Agendado",
       color: event.backgroundColor,
-      calendar: selectedCalendar,
       rawStart: toLocalDatetime(event.start),
       rawEnd: toLocalDatetime(event.end || event.start),
     });
@@ -166,7 +162,7 @@ export default function Dashboard() {
       }
 
       setIsFormModalOpen(false);
-      await loadTasks();
+      loadTasks();
     } catch (error) {
       alert("Erro ao salvar o evento.");
       console.error(error);
@@ -188,8 +184,9 @@ export default function Dashboard() {
       await api.delete(
         `/zoho/events/${selectedEvent.id}?calendar=${selectedCalendar}`,
       );
+
       setIsViewModalOpen(false);
-      await loadTasks();
+      loadTasks();
     } catch (error) {
       alert("Erro ao deletar o evento.");
       console.error(error);
@@ -207,8 +204,6 @@ export default function Dashboard() {
           justifyContent: "space-between",
           alignItems: "center",
           marginBottom: "20px",
-          gap: "15px",
-          flexWrap: "wrap",
         }}
       >
         <h1 className="dashboard-title">Painel do Administrador</h1>
@@ -235,18 +230,22 @@ export default function Dashboard() {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "15px",
-            gap: "15px",
+            gap: "12px",
             flexWrap: "wrap",
           }}
         >
           <div>
             <h2 style={{ marginBottom: "8px" }}>Gestão de Agendamentos</h2>
-            <p style={{ margin: 0, color: "#aaa", fontSize: "0.9rem" }}>
-              Calendário ativo: <strong>{getCalendarLabel()}</strong>
-            </p>
-          </div>
 
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <p style={{ color: "#ccc", margin: "0 0 10px" }}>
+              Calendário ativo:{" "}
+              <strong>
+                {selectedCalendar === "tnk_store"
+                  ? "TNK STORE"
+                  : "Meu calendário pessoal"}
+              </strong>
+            </p>
+
             <select
               value={selectedCalendar}
               onChange={(e) =>
@@ -262,24 +261,24 @@ export default function Dashboard() {
               }}
             >
               <option value="tnk_store">TNK STORE</option>
-              <option value="personal">Calendário Pessoal</option>
+              <option value="personal">Meu calendário pessoal</option>
             </select>
-
-            <button
-              onClick={openCreateModal}
-              style={{
-                padding: "10px 20px",
-                background: "#6c63ff",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontWeight: "bold",
-              }}
-            >
-              + Novo Agendamento
-            </button>
           </div>
+
+          <button
+            onClick={openCreateModal}
+            style={{
+              padding: "10px 20px",
+              background: "#6c63ff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            + Novo Agendamento
+          </button>
         </div>
 
         <div
@@ -303,6 +302,7 @@ export default function Dashboard() {
             />
             Não iniciado
           </span>
+
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <div
               style={{
@@ -314,6 +314,7 @@ export default function Dashboard() {
             />
             Em andamento
           </span>
+
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <div
               style={{
@@ -325,6 +326,7 @@ export default function Dashboard() {
             />
             Feito
           </span>
+
           <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <div
               style={{
@@ -339,7 +341,7 @@ export default function Dashboard() {
         </div>
 
         <FullCalendar
-          plugins={[dayGridPlugin]}
+          plugins={[dayGridPlugin, rrulePlugin]}
           initialView="dayGridMonth"
           height="auto"
           dayMaxEvents={3}
@@ -354,6 +356,7 @@ export default function Dashboard() {
       </div>
 
       <hr style={{ borderColor: "#333", margin: "40px 0" }} />
+
       <Users />
 
       {isFormModalOpen && (
@@ -371,15 +374,6 @@ export default function Dashboard() {
               <h2 style={{ margin: 0, color: "#fff" }}>
                 {editEventId ? "Editar Agendamento" : "Novo Agendamento"}
               </h2>
-              <p
-                style={{
-                  margin: "6px 0 0",
-                  color: "#fff",
-                  fontSize: "0.85rem",
-                }}
-              >
-                Calendário: {getCalendarLabel()}
-              </p>
             </div>
 
             <div
@@ -518,6 +512,7 @@ export default function Dashboard() {
                           <label style={{ fontSize: "0.9rem", color: "#ccc" }}>
                             Repetir até o dia:
                           </label>
+
                           <input
                             type="date"
                             value={repeatUntil}
@@ -613,10 +608,6 @@ export default function Dashboard() {
 
               <p style={{ margin: "5px 0" }}>
                 <strong>⏰ Horário:</strong> {selectedEvent.time}
-              </p>
-
-              <p style={{ margin: "5px 0" }}>
-                <strong>🗓️ Calendário:</strong> {getCalendarLabel()}
               </p>
 
               <div

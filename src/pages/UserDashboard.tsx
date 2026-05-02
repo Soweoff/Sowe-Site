@@ -89,7 +89,7 @@ export default function UserDashboard() {
           }}
         >
           <option value="tnk_store">TNK STORE</option>
-          <option value="personal">Meu calendário pessoal</option>
+          <option value="personal">Sowe Studio</option>
         </select>
       </div>
 

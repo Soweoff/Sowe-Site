@@ -1,40 +1,86 @@
 import { Outlet, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useState, useEffect } from "react";
 
 export default function Layout() {
   const { token, role, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add("menu-open");
+    } else {
+      document.body.classList.remove("menu-open");
+    }
+
+    return () => {
+      document.body.classList.remove("menu-open");
+    };
+  }, [menuOpen]);
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
 
   return (
     <div className="layout-wrapper">
-      {/* BACKGROUND ELEMENTS */}
+      {/* BACKGROUND */}
       <img
         className="image-gradient"
         src="https://res.cloudinary.com/dvqbwddan/image/upload/v1771988142/Sowe-Site/gradient_hhkjkr.png"
         alt="gradient"
       />
+
       <div className="layer-blur"></div>
 
-      {/* CONTAINER PRINCIPAL */}
+      {/* CONTAINER */}
       <div className="container">
         <header>
           <h1 className="logo">SOWE</h1>
 
-          <nav className="nav">
-            <Link to="/">Home</Link>
-            <Link to="/youtube">Youtube</Link>
-            <Link to="/edition">Edição</Link>
-            <Link to="/cs2">CS2</Link>
-            <Link to="/products">Produtos</Link>
-            <Link to="/websites">WebSites</Link>
+          {/* MENU MOBILE */}
+          <button
+            className="menu-toggle"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Abrir menu"
+          >
+            ☰
+          </button>
+
+          {/* NAV */}
+          <nav className={menuOpen ? "nav active" : "nav"}>
+            <Link to="/" onClick={closeMenu}>
+              Home
+            </Link>
+
+            <Link to="/youtube" onClick={closeMenu}>
+              Youtube
+            </Link>
+
+            <Link to="/edition" onClick={closeMenu}>
+              Edição
+            </Link>
+
+            <Link to="/cs2" onClick={closeMenu}>
+              CS2
+            </Link>
+
+            <Link to="/products" onClick={closeMenu}>
+              Produtos
+            </Link>
+
+            <Link to="/websites" onClick={closeMenu}>
+              Websites
+            </Link>
           </nav>
 
-          {/* BOTÃO DINÂMICO */}
+          {/* LOGIN / DASHBOARD */}
           {!token ? (
             <Link to="/login" className="btn-signing">
               Login
             </Link>
           ) : (
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <div className="header-actions">
               {role === "ADMIN" ? (
                 <Link to="/admin" className="btn-signing">
                   Dashboard
@@ -45,17 +91,14 @@ export default function Layout() {
                 </Link>
               )}
 
-              <button
-                onClick={logout}
-                className="btn-signing"
-                style={{ background: "#ff4d4f" }}
-              >
+              <button onClick={logout} className="btn-signing logout-btn">
                 Logout
               </button>
             </div>
           )}
         </header>
 
+        {/* PÁGINAS */}
         <main>
           <Outlet />
         </main>
@@ -77,6 +120,7 @@ export default function Layout() {
             >
               YouTube
             </a>
+
             <a
               href="https://www.instagram.com/sowevfx"
               target="_blank"
@@ -84,6 +128,7 @@ export default function Layout() {
             >
               Instagram
             </a>
+
             <a
               href="https://wa.me/5542984265832"
               target="_blank"

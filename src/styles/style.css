@@ -1898,3 +1898,13 @@ header {
 .hero-section .content h1 {
   margin-top: 1.5rem !important;
 }
+
+/* =========================================================
+   AJUSTE FINO HOME - BAIXAR TEXTO DA ESQUERDA
+========================================================= */
+
+@media (min-width: 1101px) {
+  .hero-section .content {
+    transform: translateY(35px) !important;
+  }
+}

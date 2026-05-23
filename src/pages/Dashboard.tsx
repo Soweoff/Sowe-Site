@@ -7,6 +7,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import rrulePlugin from "@fullcalendar/rrule";
 
 type CalendarKey = "tnk_store" | "personal";
+type ReminderAction = "notification" | "email" | "popup";
 
 interface Event {
   id?: string;
@@ -45,6 +46,13 @@ export default function Dashboard() {
   const [repeatUntil, setRepeatUntil] = useState("");
   const [daysOfWeek, setDaysOfWeek] = useState<string[]>([]);
 
+  const [reminderEnabled, setReminderEnabled] = useState(true);
+  const [reminderAction, setReminderAction] =
+    useState<ReminderAction>("notification");
+  const [reminderMinutes, setReminderMinutes] = useState(5);
+  const [notifyPersonal, setNotifyPersonal] = useState(true);
+  const [attendeeEmail, setAttendeeEmail] = useState("");
+
   const daysOptions = [
     { label: "Seg", value: "MO" },
     { label: "Ter", value: "TU" },
@@ -72,6 +80,14 @@ export default function Dashboard() {
     if (!dateObj) return "";
     const tzoffset = dateObj.getTimezoneOffset() * 60000;
     return new Date(dateObj.getTime() - tzoffset).toISOString().slice(0, 16);
+  };
+
+  const resetNotificationFields = () => {
+    setReminderEnabled(true);
+    setReminderAction("notification");
+    setReminderMinutes(5);
+    setNotifyPersonal(true);
+    setAttendeeEmail("");
   };
 
   const handleEventClick = (clickInfo: any) => {
@@ -113,6 +129,7 @@ export default function Dashboard() {
     setIsRecurring(false);
     setRepeatUntil("");
     setDaysOfWeek([]);
+    resetNotificationFields();
     setIsFormModalOpen(true);
   };
 
@@ -123,10 +140,11 @@ export default function Dashboard() {
     setTitle(selectedEvent.title);
     setStart(selectedEvent.rawStart);
     setEnd(selectedEvent.rawEnd);
-    setDescription(selectedEvent.description);
-    setStatus(selectedEvent.status);
+    setDescription(selectedEvent.description || "");
+    setStatus(selectedEvent.status || "Agendado");
 
     setIsRecurring(false);
+    resetNotificationFields();
     setIsFormModalOpen(true);
   };
 
@@ -150,6 +168,11 @@ export default function Dashboard() {
         isRecurring,
         repeatUntil,
         daysOfWeek,
+        reminderEnabled,
+        reminderAction,
+        reminderMinutes,
+        notifyPersonal,
+        attendeeEmail: attendeeEmail.trim() || undefined,
       };
 
       if (editEventId) {
@@ -194,50 +217,21 @@ export default function Dashboard() {
   };
 
   return (
-    <div
-      className="dashboard-container"
-      style={{ position: "relative", padding: "20px" }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
+    <div className="dashboard-container calendar-page">
+      <div className="dashboard-topbar">
         <h1 className="dashboard-title">Painel do Administrador</h1>
 
-        <button
-          onClick={logout}
-          style={{
-            padding: "10px 20px",
-            background: "#ef4444",
-            color: "#fff",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={logout} className="dashboard-danger-button">
           Sair do Sistema
         </button>
       </div>
 
-      <div className="calendar-wrapper" style={{ marginBottom: "40px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "15px",
-            gap: "12px",
-            flexWrap: "wrap",
-          }}
-        >
+      <div className="calendar-wrapper calendar-card">
+        <div className="calendar-toolbar-card">
           <div>
-            <h2 style={{ marginBottom: "8px" }}>Gestão de Agendamentos</h2>
+            <h2>Gestão de Agendamentos</h2>
 
-            <p style={{ color: "#ccc", margin: "0 0 10px" }}>
+            <p>
               Calendário ativo:{" "}
               <strong>
                 {selectedCalendar === "tnk_store" ? "TNK STORE" : "Sowe Studio"}
@@ -249,111 +243,51 @@ export default function Dashboard() {
               onChange={(e) =>
                 setSelectedCalendar(e.target.value as CalendarKey)
               }
-              style={{
-                padding: "10px",
-                background: "#2a2a36",
-                color: "#fff",
-                border: "1px solid #444",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
+              className="calendar-select"
             >
               <option value="tnk_store">TNK STORE</option>
               <option value="personal">Sowe Studio</option>
             </select>
           </div>
 
-          <button
-            onClick={openCreateModal}
-            style={{
-              padding: "10px 20px",
-              background: "#6c63ff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
+          <button onClick={openCreateModal} className="calendar-primary-button">
             + Novo Agendamento
           </button>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "15px",
-            marginBottom: "15px",
-            fontSize: "0.9rem",
-            color: "#ccc",
-            flexWrap: "wrap",
-          }}
-        >
-          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <div
-              style={{
-                width: "12px",
-                height: "12px",
-                borderRadius: "50%",
-                background: "#64748b",
-              }}
-            />
-            Não iniciado
+        <div className="calendar-legend">
+          <span>
+            <i style={{ background: "#64748b" }} /> Não iniciado
           </span>
-
-          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <div
-              style={{
-                width: "12px",
-                height: "12px",
-                borderRadius: "50%",
-                background: "#f59e0b",
-              }}
-            />
-            Em andamento
+          <span>
+            <i style={{ background: "#f59e0b" }} /> Em andamento
           </span>
-
-          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <div
-              style={{
-                width: "12px",
-                height: "12px",
-                borderRadius: "50%",
-                background: "#22c55e",
-              }}
-            />
-            Feito
+          <span>
+            <i style={{ background: "#22c55e" }} /> Feito
           </span>
-
-          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <div
-              style={{
-                width: "12px",
-                height: "12px",
-                borderRadius: "50%",
-                background: "#6c63ff",
-              }}
-            />
-            Agendado
+          <span>
+            <i style={{ background: "#6c63ff" }} /> Agendado
           </span>
         </div>
 
-        <FullCalendar
-          plugins={[dayGridPlugin, rrulePlugin]}
-          initialView="dayGridMonth"
-          height="auto"
-          dayMaxEvents={3}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth",
-          }}
-          events={events}
-          eventClick={handleEventClick}
-        />
+        <div className="calendar-scroll-area">
+          <FullCalendar
+            plugins={[dayGridPlugin, rrulePlugin]}
+            initialView="dayGridMonth"
+            height="auto"
+            dayMaxEvents={3}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth",
+            }}
+            events={events}
+            eventClick={handleEventClick}
+          />
+        </div>
       </div>
 
-      <hr style={{ borderColor: "#333", margin: "40px 0" }} />
+      <hr className="dashboard-divider" />
 
       <Users />
 
@@ -407,10 +341,8 @@ export default function Dashboard() {
                   </select>
                 </div>
 
-                <div
-                  style={{ display: "flex", gap: "10px", marginBottom: "15px" }}
-                >
-                  <div style={{ flex: 1 }}>
+                <div className="event-form-grid">
+                  <div>
                     <label>Início:</label>
                     <input
                       type="datetime-local"
@@ -421,7 +353,7 @@ export default function Dashboard() {
                     />
                   </div>
 
-                  <div style={{ flex: 1 }}>
+                  <div>
                     <label>Fim:</label>
                     <input
                       type="datetime-local"
@@ -433,30 +365,82 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                <div className="event-form-card">
+                  <label className="event-checkbox-row">
+                    <input
+                      type="checkbox"
+                      checked={reminderEnabled}
+                      onChange={(e) => setReminderEnabled(e.target.checked)}
+                    />
+                    Ativar lembrete no Zoho Calendar
+                  </label>
+
+                  {reminderEnabled && (
+                    <div className="event-form-grid event-form-grid-spaced">
+                      <div>
+                        <label>Tipo de notificação:</label>
+                        <select
+                          value={reminderAction}
+                          onChange={(e) =>
+                            setReminderAction(e.target.value as ReminderAction)
+                          }
+                          style={inputStyle}
+                        >
+                          <option value="notification">Notificação</option>
+                          <option value="email">E-mail</option>
+                          <option value="popup">Pop-up</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label>Quando avisar:</label>
+                        <select
+                          value={reminderMinutes}
+                          onChange={(e) =>
+                            setReminderMinutes(Number(e.target.value))
+                          }
+                          style={inputStyle}
+                        >
+                          <option value={5}>5 minutos antes</option>
+                          <option value={10}>10 minutos antes</option>
+                          <option value={30}>30 minutos antes</option>
+                          <option value={60}>1 hora antes</option>
+                          <option value={1440}>1 dia antes</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
+
+                  <label className="event-checkbox-row">
+                    <input
+                      type="checkbox"
+                      checked={notifyPersonal}
+                      onChange={(e) => setNotifyPersonal(e.target.checked)}
+                    />
+                    Notificar minha conta pessoal como participante
+                  </label>
+
+                  {notifyPersonal && (
+                    <div style={{ marginTop: "12px" }}>
+                      <label>E-mail pessoal para notificar:</label>
+                      <input
+                        type="email"
+                        placeholder="Opcional. Se vazio, usa o e-mail do Render."
+                        value={attendeeEmail}
+                        onChange={(e) => setAttendeeEmail(e.target.value)}
+                        style={inputStyle}
+                      />
+                    </div>
+                  )}
+                </div>
+
                 {!editEventId && (
-                  <div
-                    style={{
-                      marginBottom: "15px",
-                      padding: "12px",
-                      border: "1px solid #444",
-                      borderRadius: "8px",
-                      backgroundColor: "rgba(255,255,255,0.02)",
-                    }}
-                  >
-                    <label
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        cursor: "pointer",
-                        fontWeight: "bold",
-                      }}
-                    >
+                  <div className="event-form-card">
+                    <label className="event-checkbox-row">
                       <input
                         type="checkbox"
                         checked={isRecurring}
                         onChange={(e) => setIsRecurring(e.target.checked)}
-                        style={{ width: "18px", height: "18px" }}
                       />
                       Repetir semanalmente?
                     </label>
@@ -467,14 +451,7 @@ export default function Dashboard() {
                           Quais dias da semana?
                         </label>
 
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "6px",
-                            marginTop: "8px",
-                            flexWrap: "wrap",
-                          }}
-                        >
+                        <div className="days-selector">
                           {daysOptions.map((day) => (
                             <button
                               key={day.value}
@@ -486,20 +463,11 @@ export default function Dashboard() {
                                     : [...prev, day.value],
                                 );
                               }}
-                              style={{
-                                padding: "6px 10px",
-                                borderRadius: "6px",
-                                border: "none",
-                                cursor: "pointer",
-                                fontSize: "0.85rem",
-                                fontWeight: "bold",
-                                backgroundColor: daysOfWeek.includes(day.value)
-                                  ? "#6c63ff"
-                                  : "#3a3a48",
-                                color: daysOfWeek.includes(day.value)
-                                  ? "#fff"
-                                  : "#aaa",
-                              }}
+                              className={
+                                daysOfWeek.includes(day.value)
+                                  ? "day-button day-button-active"
+                                  : "day-button"
+                              }
                             >
                               {day.label}
                             </button>
@@ -527,14 +495,14 @@ export default function Dashboard() {
                 <div style={{ marginBottom: "20px" }}>
                   <label>Descrição:</label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     style={inputStyle}
                   />
                 </div>
 
-                <div style={{ display: "flex", gap: "10px" }}>
+                <div className="modal-actions-row">
                   <button
                     type="submit"
                     disabled={loading}
@@ -625,9 +593,7 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div
-                style={{ display: "flex", gap: "10px", marginBottom: "15px" }}
-              >
+              <div className="modal-actions-row">
                 <button
                   style={{
                     ...closeButtonStyle,
@@ -678,13 +644,14 @@ const modalOverlayStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  zIndex: 1000,
+  zIndex: 3000,
+  padding: "12px",
 };
 
 const modalContentStyle: React.CSSProperties = {
   backgroundColor: "#1e1e24",
-  width: "90%",
-  maxWidth: "450px",
+  width: "95%",
+  maxWidth: "620px",
   borderRadius: "12px",
   overflow: "hidden",
   boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
@@ -707,22 +674,21 @@ const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "10px",
   marginTop: "5px",
-  borderRadius: "6px",
-  border: "1px solid #444",
-  backgroundColor: "#2a2a36",
+  background: "#2a2a36",
   color: "#fff",
-  boxSizing: "border-box",
+  border: "1px solid #444",
+  borderRadius: "8px",
 };
 
 const closeButtonStyle: React.CSSProperties = {
   display: "block",
   width: "100%",
-  padding: "10px",
-  backgroundColor: "#3a3a48",
+  padding: "12px",
+  marginTop: "15px",
+  backgroundColor: "#6c63ff",
   color: "#fff",
   border: "none",
   borderRadius: "8px",
   cursor: "pointer",
   fontWeight: "bold",
-  transition: "background 0.2s",
 };

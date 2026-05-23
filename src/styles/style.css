@@ -1448,3 +1448,233 @@ body.menu-open {
     gap: 0.85rem;
   }
 }
+
+/* =========================================================
+   PATCH HOME - AJUSTE VISUAL DESKTOP + MOBILE
+   Cole no FINAL do style.css
+========================================================= */
+
+/* Corrige camada de blur que estava cobrindo a tela */
+.layer-blur {
+  width: 30rem;
+  height: 0;
+  position: absolute;
+  top: 20%;
+  right: 0;
+  box-shadow: 0 0 700px 15px rgba(244, 201, 1, 0.18);
+  rotate: -30deg;
+  z-index: 0;
+  pointer-events: none;
+  backdrop-filter: none;
+  inset: auto;
+}
+
+/* Garante que o fundo não cubra o conteúdo */
+.image-gradient {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0.45;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header mais elegante */
+header {
+  padding: 1.5rem clamp(2rem, 6vw, 6rem);
+}
+
+.logo,
+header h1 {
+  font-size: clamp(2.3rem, 3.5vw, 3.3rem);
+  letter-spacing: 0.22em;
+}
+
+/* Hero mais equilibrado */
+.hero-section {
+  min-height: calc(100vh - 110px);
+  display: flex;
+  align-items: center;
+}
+
+.hero-content {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(460px, 0.95fr) minmax(520px, 1.05fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+/* Texto da Home */
+.content {
+  max-width: 50rem;
+  margin-left: clamp(1rem, 6vw, 6rem);
+  position: relative;
+  z-index: 3;
+}
+
+.content h1 {
+  font-size: clamp(3.2rem, 5.4vw, 5.4rem);
+  line-height: 1.08;
+  letter-spacing: 0.055em;
+  margin: 2rem 0 1.8rem;
+  max-width: 100%;
+}
+
+.description {
+  max-width: 38rem;
+  font-size: clamp(1rem, 1.25vw, 1.18rem);
+  line-height: 1.7;
+  color: #aaa;
+}
+
+.tag-box {
+  width: min(18rem, 100%);
+}
+
+/* Botões mais alinhados */
+.buttons {
+  margin-top: 2.2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-get-started,
+.btn-signing-main {
+  min-width: 170px;
+  text-align: center;
+}
+
+/* Spline / painel 3D mais controlado */
+.painels-3d {
+  position: relative;
+  width: 100%;
+  height: clamp(440px, 54vh, 650px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.painels-3d canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Evita que o Spline empurre a página lateralmente */
+.painels-3d > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .content {
+    margin-left: 0;
+    max-width: 46rem;
+    padding-top: 2rem;
+  }
+
+  .painels-3d {
+    height: 460px;
+  }
+
+  .content h1 {
+    font-size: clamp(3rem, 8vw, 4.4rem);
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  header {
+    padding: 1.2rem 1.4rem;
+  }
+
+  .logo,
+  header h1 {
+    font-size: 2rem;
+    letter-spacing: 0.16em;
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding: 2rem 0 3rem;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .content {
+    margin-left: 0;
+    padding: 1rem 0;
+  }
+
+  .content h1 {
+    font-size: clamp(2.35rem, 12vw, 3.1rem);
+    line-height: 1.12;
+    letter-spacing: 0.035em;
+  }
+
+  .description {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .buttons a {
+    width: 100%;
+  }
+
+  .painels-3d {
+    height: 320px;
+    margin-top: 1rem;
+  }
+}
+
+/* =========================================================
+   CELULAR PEQUENO
+========================================================= */
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .content h1 {
+    font-size: 2.15rem;
+  }
+
+  .tag-box {
+    height: 2.3rem;
+  }
+
+  .painels-3d {
+    height: 260px;
+  }
+}

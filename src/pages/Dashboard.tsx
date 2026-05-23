@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties, type FormEvent } from "react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
 import Users from "./Users";
@@ -6,6 +6,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import rrulePlugin from "@fullcalendar/rrule";
+import ptBrLocale from "@fullcalendar/core/locales/pt-br";
 
 type CalendarKey = "tnk_store" | "personal";
 type ReminderAction = "notification" | "email" | "popup";
@@ -54,6 +55,11 @@ export default function Dashboard() {
   const [notifyPersonal, setNotifyPersonal] = useState(true);
   const [attendeeEmail, setAttendeeEmail] = useState("");
 
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth <= 768;
+  });
+
   const daysOptions = [
     { label: "Seg", value: "MO" },
     { label: "Ter", value: "TU" },
@@ -63,6 +69,19 @@ export default function Dashboard() {
     { label: "Sáb", value: "SA" },
     { label: "Dom", value: "SU" },
   ];
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= 768);
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   async function loadTasks() {
     try {
@@ -74,12 +93,14 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    loadTasks();
+    void loadTasks();
   }, [selectedCalendar]);
 
   const toLocalDatetime = (dateObj: Date | null) => {
     if (!dateObj) return "";
+
     const tzoffset = dateObj.getTimezoneOffset() * 60000;
+
     return new Date(dateObj.getTime() - tzoffset).toISOString().slice(0, 16);
   };
 
@@ -149,7 +170,7 @@ export default function Dashboard() {
     setIsFormModalOpen(true);
   };
 
-  const handleSaveEvent = async (e: React.FormEvent) => {
+  const handleSaveEvent = async (e: FormEvent) => {
     e.preventDefault();
 
     if (isRecurring && daysOfWeek.length === 0 && !editEventId) {
@@ -186,7 +207,7 @@ export default function Dashboard() {
       }
 
       setIsFormModalOpen(false);
-      loadTasks();
+      await loadTasks();
     } catch (error) {
       alert("Erro ao salvar o evento.");
       console.error(error);
@@ -210,7 +231,7 @@ export default function Dashboard() {
       );
 
       setIsViewModalOpen(false);
-      loadTasks();
+      await loadTasks();
     } catch (error) {
       alert("Erro ao deletar o evento.");
       console.error(error);
@@ -260,12 +281,15 @@ export default function Dashboard() {
           <span>
             <i style={{ background: "#64748b" }} /> Não iniciado
           </span>
+
           <span>
             <i style={{ background: "#f59e0b" }} /> Em andamento
           </span>
+
           <span>
             <i style={{ background: "#22c55e" }} /> Feito
           </span>
+
           <span>
             <i style={{ background: "#6c63ff" }} /> Agendado
           </span>
@@ -273,14 +297,33 @@ export default function Dashboard() {
 
         <div className="calendar-scroll-area">
           <FullCalendar
-            plugins={[dayGridPlugin, rrulePlugin]}
-            initialView="dayGridMonth"
-            height="auto"
-            dayMaxEvents={3}
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth",
+            key={isMobile ? "mobile-list-calendar" : "desktop-month-calendar"}
+            plugins={[dayGridPlugin, listPlugin, rrulePlugin]}
+            locales={[ptBrLocale]}
+            locale="pt-br"
+            initialView={isMobile ? "listWeek" : "dayGridMonth"}
+            height={isMobile ? "auto" : 720}
+            contentHeight="auto"
+            expandRows={!isMobile}
+            dayMaxEvents={isMobile ? false : 3}
+            headerToolbar={
+              isMobile
+                ? {
+                    left: "prev,next",
+                    center: "title",
+                    right: "listWeek",
+                  }
+                : {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth",
+                  }
+            }
+            buttonText={{
+              today: "Hoje",
+              month: "Mês",
+              week: "Semana",
+              list: "Lista",
             }}
             events={events}
             eventClick={handleEventClick}
@@ -634,7 +677,7 @@ export default function Dashboard() {
   );
 }
 
-const modalOverlayStyle: React.CSSProperties = {
+const modalOverlayStyle: CSSProperties = {
   position: "fixed",
   top: 0,
   left: 0,
@@ -649,7 +692,7 @@ const modalOverlayStyle: React.CSSProperties = {
   padding: "12px",
 };
 
-const modalContentStyle: React.CSSProperties = {
+const modalContentStyle: CSSProperties = {
   backgroundColor: "#1e1e24",
   width: "95%",
   maxWidth: "620px",
@@ -660,18 +703,18 @@ const modalContentStyle: React.CSSProperties = {
   color: "#fff",
 };
 
-const modalHeaderStyle: React.CSSProperties = {
+const modalHeaderStyle: CSSProperties = {
   padding: "15px 20px",
   textAlign: "center",
 };
 
-const modalBodyStyle: React.CSSProperties = {
+const modalBodyStyle: CSSProperties = {
   padding: "20px",
   fontSize: "1rem",
   lineHeight: "1.5",
 };
 
-const inputStyle: React.CSSProperties = {
+const inputStyle: CSSProperties = {
   width: "100%",
   padding: "10px",
   marginTop: "5px",
@@ -681,7 +724,7 @@ const inputStyle: React.CSSProperties = {
   borderRadius: "8px",
 };
 
-const closeButtonStyle: React.CSSProperties = {
+const closeButtonStyle: CSSProperties = {
   display: "block",
   width: "100%",
   padding: "12px",

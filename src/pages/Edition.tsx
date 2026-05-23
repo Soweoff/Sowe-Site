@@ -31,7 +31,7 @@ export default function Edition() {
       img: "https://res.cloudinary.com/dvqbwddan/image/upload/v1771996972/Sowe-Site/Equipamento/PC_exbtnj.png",
     },
     {
-      name: "Headset Redragon",
+      name: "Moni Redragon",
       desc: "Monitoramento de áudio",
       img: "https://res.cloudinary.com/dvqbwddan/image/upload/v1771996972/Sowe-Site/Equipamento/Redragon_wnfxtt.png",
     },

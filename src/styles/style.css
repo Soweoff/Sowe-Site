@@ -200,7 +200,7 @@ nav a {
   font-size: 0.95rem;
   letter-spacing: 0.09rem;
   text-decoration: none;
-  color: black;
+  color: var(--text);
   opacity: 0.86;
   transition:
     color 0.25s ease,

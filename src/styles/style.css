@@ -1905,6 +1905,6 @@ header {
 
 @media (min-width: 1101px) {
   .hero-section .content {
-    transform: translateY(35px) !important;
+    transform: translateY(50px) !important;
   }
 }

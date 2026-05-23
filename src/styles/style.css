@@ -1678,3 +1678,182 @@ header h1 {
     height: 260px;
   }
 }
+
+/* =========================================================
+   CORREÇÃO HOME + SPLINE DESKTOP
+   Cole no FINAL do style.css
+========================================================= */
+
+/* Remove o espaçamento estranho no topo da Home */
+.hero-section {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+/* Volta a Home para o estilo original: texto à esquerda, Spline grande à direita */
+.hero-content {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+}
+
+/* Texto da Home */
+.hero-section .content {
+  position: relative;
+  z-index: 5;
+  max-width: 44rem;
+  margin-left: clamp(2rem, 8vw, 8rem);
+  padding-top: clamp(3rem, 8vh, 6rem);
+}
+
+/* Título mais bonito e evita o "E" sozinho */
+.hero-section .content h1 {
+  font-size: clamp(3.6rem, 5.8vw, 6rem);
+  line-height: 1.08;
+  letter-spacing: 0.045em;
+  max-width: 50rem;
+  margin: 2rem 0 1.8rem;
+}
+
+/* Descrição */
+.hero-section .description {
+  max-width: 38rem;
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+/* Spline grande como antes */
+.painels-3d {
+  position: absolute;
+  top: 8%;
+  right: -5%;
+  width: 62vw;
+  height: 78vh;
+  min-height: 620px;
+  max-height: 820px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* Garante que o Spline ocupe todo o espaço */
+.painels-3d > div,
+.painels-3d canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Header menos alto */
+header {
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+}
+
+/* Corrige camada de blur para não cobrir a página */
+.layer-blur {
+  width: 30rem;
+  height: 0;
+  position: absolute;
+  top: 20%;
+  right: 0;
+  box-shadow: 0 0 700px 15px rgba(244, 201, 1, 0.2);
+  rotate: -30deg;
+  z-index: 0;
+  pointer-events: none;
+  backdrop-filter: none;
+  inset: auto;
+}
+
+/* Fundo sempre atrás */
+.image-gradient {
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Conteúdo acima do fundo */
+.container,
+section,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .hero-section .content {
+    margin-left: 0;
+    padding-top: 2rem;
+  }
+
+  .painels-3d {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    height: 520px;
+    min-height: 520px;
+    margin-top: 2rem;
+  }
+
+  .hero-section .content h1 {
+    font-size: clamp(3rem, 8vw, 4.8rem);
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: auto;
+    padding: 2rem 0 3rem;
+  }
+
+  .hero-content {
+    min-height: auto;
+  }
+
+  .hero-section .content {
+    margin-left: 0;
+    padding-top: 1rem;
+  }
+
+  .hero-section .content h1 {
+    font-size: clamp(2.4rem, 12vw, 3.2rem);
+    line-height: 1.15;
+    letter-spacing: 0.035em;
+  }
+
+  .painels-3d {
+    width: 100%;
+    height: 340px;
+    min-height: 340px;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section .content h1 {
+    font-size: 2.25rem;
+  }
+
+  .painels-3d {
+    height: 280px;
+    min-height: 280px;
+  }
+}

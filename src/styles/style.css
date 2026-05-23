@@ -1567,3 +1567,137 @@ nav a.btn-signing::after,
 nav a.mobile-login-button::after {
   display: none !important;
 }
+
+/* =========================================================
+   AJUSTE DE PROPORÇÃO - PRODUCTS / YOUTUBE / PÁGINAS INTERNAS
+   Mantém a Home intacta
+========================================================= */
+
+/* Conteúdo das páginas internas, sem afetar a Home */
+main > .content:not(.hero-section .content) {
+  margin-left: clamp(1.5rem, 7vw, 8rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  max-width: 46rem;
+}
+
+/* Títulos das páginas internas */
+main > .content:not(.hero-section .content) h1 {
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: 0.055em;
+  margin-bottom: 1.8rem;
+}
+
+/* Descrição das páginas internas */
+main > .content:not(.hero-section .content) .description {
+  max-width: 40rem;
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+/* Reduz espaço exagerado antes das seções */
+.products-section,
+.youtube-section {
+  padding-top: clamp(2rem, 4vw, 4rem);
+}
+
+/* Títulos "Cursos" e "Meus Canais no YouTube" */
+.products-title,
+.youtube-section h2 {
+  font-size: clamp(2.3rem, 4vw, 3.4rem);
+  margin-bottom: 2.2rem;
+  letter-spacing: 0.08em;
+}
+
+/* Cards de produtos mais proporcionais */
+.products-grid {
+  max-width: 1120px;
+  gap: 1.7rem;
+}
+
+.product-card {
+  padding: 1.25rem;
+}
+
+.product-card img {
+  height: 210px;
+}
+
+.product-card h3 {
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.product-card p {
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+/* Cards do YouTube um pouco mais compactos */
+.youtube-list {
+  max-width: 1080px;
+  gap: 1.15rem;
+}
+
+.youtube-card {
+  padding: 1.15rem 1.35rem;
+}
+
+.channel-avatar {
+  width: 82px;
+  height: 82px;
+}
+
+.channel-info h3 {
+  font-size: 1.35rem;
+}
+
+.channel-info p {
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   MOBILE - PRODUCTS / YOUTUBE
+========================================================= */
+
+@media (max-width: 768px) {
+  main > .content:not(.hero-section .content) {
+    margin-left: 0;
+    padding-top: 2rem;
+    max-width: 100%;
+  }
+
+  main > .content:not(.hero-section .content) h1 {
+    font-size: clamp(2.35rem, 11vw, 3.1rem);
+    line-height: 1.15;
+  }
+
+  main > .content:not(.hero-section .content) .description {
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .products-section,
+  .youtube-section {
+    padding-top: 2.5rem;
+  }
+
+  .products-title,
+  .youtube-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.7rem;
+  }
+
+  .product-card img {
+    height: 190px;
+  }
+
+  .youtube-card {
+    padding: 1.2rem;
+  }
+
+  .channel-avatar {
+    width: 78px;
+    height: 78px;
+  }
+}

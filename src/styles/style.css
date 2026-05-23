@@ -1540,3 +1540,30 @@ nav a:hover::after {
     gap: 0.85rem;
   }
 }
+
+/* =========================================================
+   FIX DEFINITIVO - TEXTO PRETO NO BOTÃO BRANCO DA NAV
+========================================================= */
+
+.nav a.btn-signing,
+.nav a.mobile-login-button,
+nav a.btn-signing,
+nav a.mobile-login-button {
+  color: #050505 !important;
+  opacity: 1 !important;
+}
+
+.nav a.btn-signing:hover,
+.nav a.mobile-login-button:hover,
+nav a.btn-signing:hover,
+nav a.mobile-login-button:hover {
+  color: #050505 !important;
+}
+
+/* remove o underline amarelo embaixo do botão */
+.nav a.btn-signing::after,
+.nav a.mobile-login-button::after,
+nav a.btn-signing::after,
+nav a.mobile-login-button::after {
+  display: none !important;
+}

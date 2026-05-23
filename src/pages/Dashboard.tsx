@@ -4,6 +4,7 @@ import { api } from "../services/api";
 import Users from "./Users";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import listPlugin from "@fullcalendar/list";
 import rrulePlugin from "@fullcalendar/rrule";
 
 type CalendarKey = "tnk_store" | "personal";

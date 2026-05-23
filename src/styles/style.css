@@ -1857,3 +1857,44 @@ footer {
     min-height: 280px;
   }
 }
+
+/* =========================================================
+   FIX ESPAÇO TOPO HOME
+========================================================= */
+
+header {
+  padding-top: 0.8rem !important;
+  padding-bottom: 0.8rem !important;
+}
+
+/* Remove altura exagerada da área inicial */
+.hero-section {
+  min-height: calc(100vh - 75px) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Faz o hero começar mais perto do header */
+.hero-content {
+  min-height: calc(100vh - 75px) !important;
+}
+
+/* Remove o padding que empurrava o texto para baixo */
+.hero-section .content {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Spline sobe um pouco */
+.painels-3d {
+  top: 0 !important;
+  height: 82vh !important;
+  min-height: 650px !important;
+}
+
+/* Ajuste fino do título */
+.hero-section .content h1 {
+  margin-top: 1.5rem !important;
+}

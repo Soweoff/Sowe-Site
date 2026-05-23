@@ -1908,3 +1908,111 @@ header {
     transform: translateY(50px) !important;
   }
 }
+
+/* =========================================================
+   FIX LOGIN MOBILE + WEBSITES TITLE
+========================================================= */
+
+/* Desktop: esconde login interno do menu */
+.mobile-auth-actions {
+  display: none;
+}
+
+/* Mantém botão desktop normal */
+.desktop-auth-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* Corrige título/subtítulo da página Websites */
+.portfolio-title,
+.websites-title {
+  font-size: clamp(2.3rem, 5vw, 3.3rem);
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.1rem !important;
+  text-align: center;
+}
+
+.portfolio-subtitle,
+.websites-subtitle {
+  display: block;
+  max-width: 720px;
+  margin: 0 auto 3.5rem !important;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #a8a8a8;
+  text-align: center;
+}
+
+/* Dá mais respiro no topo da página Websites */
+.portfolio-section,
+.websites-section {
+  padding-top: 7rem;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  /* Esconde botão desktop no mobile */
+  .desktop-auth-actions {
+    display: none !important;
+  }
+
+  /* Mostra login dentro do menu mobile */
+  .mobile-auth-actions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .mobile-login-button,
+  .mobile-logout-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0.9rem 1.2rem;
+    border-radius: 999px;
+
+    background: #f4c901;
+    color: #000;
+
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-logout-button {
+    background: #ff4d4f;
+    color: white;
+  }
+
+  /* Corrige texto colado no mobile */
+  .portfolio-section,
+  .websites-section {
+    padding-top: 5rem;
+  }
+
+  .portfolio-title,
+  .websites-title {
+    font-size: 2.2rem;
+    line-height: 1.2;
+    margin-bottom: 1rem !important;
+  }
+
+  .portfolio-subtitle,
+  .websites-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: 2.5rem !important;
+    padding: 0 0.5rem;
+  }
+}

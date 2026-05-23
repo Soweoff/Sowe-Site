@@ -52,50 +52,88 @@ export default function Layout() {
             <Link to="/" onClick={closeMenu}>
               Home
             </Link>
-
             <Link to="/youtube" onClick={closeMenu}>
               Youtube
             </Link>
-
             <Link to="/edition" onClick={closeMenu}>
               Edição
             </Link>
-
             <Link to="/cs2" onClick={closeMenu}>
               CS2
             </Link>
-
             <Link to="/products" onClick={closeMenu}>
               Produtos
             </Link>
-
             <Link to="/websites" onClick={closeMenu}>
               Websites
             </Link>
-          </nav>
 
-          {/* LOGIN / DASHBOARD */}
-          {!token ? (
-            <Link to="/login" className="btn-signing">
-              Login
-            </Link>
-          ) : (
-            <div className="header-actions">
-              {role === "ADMIN" ? (
-                <Link to="/admin" className="btn-signing">
-                  Dashboard
+            <div className="mobile-auth-actions">
+              {!token ? (
+                <Link
+                  to="/login"
+                  className="mobile-login-button"
+                  onClick={closeMenu}
+                >
+                  Login
                 </Link>
               ) : (
-                <Link to="/dashboard" className="btn-signing">
-                  Dashboard
-                </Link>
-              )}
+                <>
+                  {role === "ADMIN" ? (
+                    <Link
+                      to="/admin"
+                      className="mobile-login-button"
+                      onClick={closeMenu}
+                    >
+                      Dashboard
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/dashboard"
+                      className="mobile-login-button"
+                      onClick={closeMenu}
+                    >
+                      Dashboard
+                    </Link>
+                  )}
 
-              <button onClick={logout} className="btn-signing logout-btn">
-                Logout
-              </button>
+                  <button
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                    className="mobile-logout-button"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
             </div>
-          )}
+          </nav>
+
+          <div className="desktop-auth-actions">
+            {!token ? (
+              <Link to="/login" className="btn-signing">
+                Login
+              </Link>
+            ) : (
+              <div className="header-actions">
+                {role === "ADMIN" ? (
+                  <Link to="/admin" className="btn-signing">
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link to="/dashboard" className="btn-signing">
+                    Dashboard
+                  </Link>
+                )}
+
+                <button onClick={logout} className="btn-signing logout-btn">
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </header>
 
         {/* PÁGINAS */}

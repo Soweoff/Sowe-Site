@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
 import Users from "./Users";
@@ -242,6 +243,10 @@ export default function Dashboard() {
     <div className="dashboard-container calendar-page">
       <div className="dashboard-topbar">
         <h1 className="dashboard-title">Painel do Administrador</h1>
+
+        <Link to="/admin/metrics" className="btn-secondary">
+          Métricas
+        </Link>
 
         <button onClick={logout} className="dashboard-danger-button">
           Sair do Sistema

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { getApiErrorMessage } from "../services/errors";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error(error);
-      alert("Email ou senha inválidos");
+      alert(getApiErrorMessage(error, "Email ou senha inválidos"));
     } finally {
       setLoading(false);
     }

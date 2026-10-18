@@ -52,6 +52,9 @@ export default function Layout() {
             <Link to="/" onClick={closeMenu}>
               Home
             </Link>
+            <Link to="/portfolio" onClick={closeMenu}>
+              Portfólio
+            </Link>
             <Link to="/youtube" onClick={closeMenu}>
               Youtube
             </Link>

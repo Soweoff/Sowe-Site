@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Websites from "./pages/Websites";
+import Portfolio from "./pages/Portfolio";
 import UserDashboard from "./pages/UserDashboard";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/websites" element={<Websites />} />
+          <Route path="/portfolio" element={<Portfolio />} />
 
           {/* Dashboard USER */}
           <Route

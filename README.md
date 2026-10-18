@@ -11,6 +11,7 @@ Produção: <https://sowestudio.com.br>
 | Rota | Página | Acesso |
 |---|---|---|
 | `/` | Home: serviços e últimos trabalhos (com painel 3D do Spline) | Público |
+| `/portfolio` | Portfólio com filtros (vídeos/VFX e sites); os projetos ficam em `src/data/projects.ts` | Público |
 | `/youtube` | Canais do YouTube com inscritos e visualizações | Público |
 | `/edition` | Edição, VFX e 3D: estilos, softwares e equipamentos | Público |
 | `/cs2` | Conteúdo de CS2, parceiros e cupons | Público |
@@ -73,6 +74,7 @@ O workflow `.github/workflows/ci.yml` instala as dependências, roda o lint e fa
 ```
 src/
   pages/        uma página por rota
+  data/         projects.ts: lista editável do portfólio
   components/   layout e elementos compartilhados
   context/      AuthContext (sessão e papel do usuário)
   routes/       ProtectedRoute

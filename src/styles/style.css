@@ -2217,3 +2217,145 @@ main > .content:not(.hero-section .content) .description {
     font-size: 0.82rem;
   }
 }
+
+/* =========================
+   PORTFÓLIO (filtros, vídeo e CTA)
+========================= */
+
+.portfolio-filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.portfolio-filter {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease,
+    background 0.25s ease;
+}
+
+.portfolio-filter:hover {
+  border-color: var(--yellow);
+  color: var(--yellow);
+}
+
+.portfolio-filter.active {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: #080808;
+}
+
+.portfolio-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: #111;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.portfolio-thumb .portfolio-image {
+  transition: transform 0.4s ease;
+}
+
+.portfolio-thumb:hover .portfolio-image {
+  transform: scale(1.05);
+}
+
+.portfolio-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3.4rem;
+  height: 3.4rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(5, 5, 5, 0.7);
+  border: 1px solid var(--yellow);
+  color: var(--yellow);
+  font-size: 1.1rem;
+  padding-left: 0.2rem;
+}
+
+.portfolio-tags {
+  list-style: none;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: -0.6rem 0 1.2rem;
+  padding: 0;
+}
+
+.portfolio-tags li {
+  font-size: 0.78rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+}
+
+.portfolio-cta {
+  margin-top: 4rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-yellow);
+}
+
+.portfolio-cta h3 {
+  color: var(--yellow);
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.portfolio-cta p {
+  color: var(--muted);
+  margin-bottom: 1.4rem;
+}
+
+.portfolio-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.portfolio-modal-box {
+  position: relative;
+  width: min(100%, 960px);
+}
+
+.portfolio-modal-close {
+  position: absolute;
+  top: -2.6rem;
+  right: 0;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.portfolio-modal-close:hover {
+  color: var(--yellow);
+}

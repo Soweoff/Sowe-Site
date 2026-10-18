@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { getApiErrorMessage } from "../services/errors";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -19,7 +20,12 @@ export default function Register() {
       await register(name, email, password);
       navigate("/dashboard");
     } catch (error) {
-      alert("Erro ao criar conta");
+      alert(
+        getApiErrorMessage(
+          error,
+          "Erro ao criar conta. Confira os dados (a senha precisa ter de 6 a 72 caracteres).",
+        ),
+      );
     } finally {
       setLoading(false);
     }

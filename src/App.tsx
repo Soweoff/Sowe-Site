@@ -13,6 +13,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Websites from "./pages/Websites";
 import Portfolio from "./pages/Portfolio";
 import UserDashboard from "./pages/UserDashboard";
+import Metrics from "./pages/Metrics";
 
 function App() {
   return (
@@ -46,6 +47,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/metrics"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <Metrics />
               </ProtectedRoute>
             }
           />

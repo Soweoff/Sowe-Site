@@ -19,6 +19,7 @@ Produção: <https://sowestudio.com.br>
 | `/websites` | Sites desenvolvidos | Público |
 | `/login` · `/register` | Entrar e criar conta | Público |
 | `/dashboard` | Planejamento de entregas (calendário somente leitura) | Usuário logado |
+| `/admin/metrics` | Métricas dos canais do YouTube (inscritos, views, vídeos) | Somente `ADMIN` |
 | `/admin` | Painel do administrador: agendamentos e usuários | Somente `ADMIN` |
 
 ## Como a autenticação funciona

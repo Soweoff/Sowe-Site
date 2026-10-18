@@ -38,11 +38,11 @@ function App() {
             }
           />
 
-          {/* Dashboard ADMIN */}
+          {/* Dashboard ADMIN (somente papel ADMIN) */}
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <Dashboard />
               </ProtectedRoute>
             }

@@ -177,6 +177,8 @@ export default function Layout() {
             >
               WhatsApp
             </a>
+
+            <Link to="/privacidade">Privacidade</Link>
           </div>
         </div>
 

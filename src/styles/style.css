@@ -2623,3 +2623,53 @@ main > .content:not(.hero-section .content) .description {
 .metrics-error {
   color: var(--danger);
 }
+
+/* =========================
+   PÁGINAS LEGAIS
+========================= */
+
+.legal-section {
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 3vw, 2rem);
+}
+
+.legal-container {
+  width: min(100%, 820px);
+  margin: 0 auto;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.legal-title {
+  color: white;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin-bottom: 0.4rem;
+}
+
+.legal-updated {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.legal-container h2 {
+  color: var(--yellow);
+  font-size: 1.25rem;
+  margin: 2rem 0 0.6rem;
+}
+
+.legal-container p,
+.legal-container ul {
+  margin-bottom: 0.9rem;
+}
+
+.legal-container ul {
+  padding-left: 1.3rem;
+}
+
+.legal-container li {
+  margin-bottom: 0.4rem;
+}
+
+.legal-container a {
+  color: var(--yellow);
+}

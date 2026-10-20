@@ -17,6 +17,7 @@ Produção: <https://sowestudio.com.br>
 | `/cs2` | Conteúdo de CS2, parceiros e cupons | Público |
 | `/products` | Cursos e produtos digitais (compra em links externos) | Público |
 | `/websites` | Sites desenvolvidos | Público |
+| `/privacidade` | Política de Privacidade (exigida pelo Google para o OAuth do YouTube) | Público |
 | `/login` · `/register` | Entrar e criar conta | Público |
 | `/dashboard` | Planejamento de entregas (calendário somente leitura) | Usuário logado |
 | `/admin/metrics` | Métricas dos canais do YouTube (totais e períodos de 30/90/365 dias) | Somente `ADMIN` |

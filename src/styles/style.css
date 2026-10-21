@@ -2673,3 +2673,143 @@ main > .content:not(.hero-section .content) .description {
 .legal-container a {
   color: var(--yellow);
 }
+
+/* =========================
+   AGENDAMENTO
+========================= */
+
+.booking-section {
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 3vw, 2rem);
+}
+
+.booking-container {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.booking-card {
+  margin-top: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+
+.booking-step {
+  color: var(--yellow);
+  font-size: 1.05rem;
+  margin: 1.25rem 0 0.75rem;
+}
+
+.booking-step:first-child {
+  margin-top: 0;
+}
+
+.booking-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.booking-chip {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.booking-chip:hover {
+  border-color: var(--yellow);
+  color: var(--yellow);
+}
+
+.booking-chip.active {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: #080808;
+  font-weight: 600;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.booking-form input,
+.booking-form textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.booking-form input:focus,
+.booking-form textarea:focus {
+  outline: none;
+  border-color: var(--yellow);
+}
+
+.booking-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.booking-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0.75rem 0;
+}
+
+.booking-error {
+  color: var(--danger);
+}
+
+.booking-notice {
+  color: var(--text);
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+}
+
+.booking-done {
+  text-align: center;
+}
+
+.booking-done h2 {
+  color: var(--yellow);
+  margin-bottom: 0.75rem;
+}
+
+.booking-done p {
+  margin-bottom: 0.6rem;
+  color: var(--text);
+}
+
+.booking-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.booking-when {
+  color: var(--yellow);
+  margin: -0.4rem 0 0.5rem;
+  text-transform: capitalize;
+}

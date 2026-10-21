@@ -12,6 +12,7 @@ Produção: <https://sowestudio.com.br>
 |---|---|---|
 | `/` | Home: serviços e últimos trabalhos (com painel 3D do Spline) | Público |
 | `/portfolio` | Portfólio com filtros (vídeos/VFX e sites); os projetos ficam em `src/data/projects.ts` | Público |
+| `/agendar` | Agendamento público: o cliente escolhe um horário livre e envia o pedido | Público |
 | `/youtube` | Canais do YouTube com inscritos e visualizações | Público |
 | `/edition` | Edição, VFX e 3D: estilos, softwares e equipamentos | Público |
 | `/cs2` | Conteúdo de CS2, parceiros e cupons | Público |
@@ -20,6 +21,7 @@ Produção: <https://sowestudio.com.br>
 | `/privacidade` | Política de Privacidade (exigida pelo Google para o OAuth do YouTube) | Público |
 | `/login` · `/register` | Entrar e criar conta | Público |
 | `/dashboard` | Planejamento de entregas (calendário somente leitura) | Usuário logado |
+| `/admin/agendamentos` | Aprovar ou recusar pedidos de agendamento | Somente `ADMIN` |
 | `/admin/metrics` | Métricas dos canais do YouTube (totais e períodos de 30/90/365 dias) | Somente `ADMIN` |
 | `/admin` | Painel do administrador: agendamentos e usuários | Somente `ADMIN` |
 

@@ -248,6 +248,10 @@ export default function Dashboard() {
           Pedidos
         </Link>
 
+        <Link to="/admin/tarefas" className="btn-secondary">
+          Missões
+        </Link>
+
         <Link to="/admin/metrics" className="btn-secondary">
           Métricas
         </Link>

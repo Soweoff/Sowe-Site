@@ -17,6 +17,7 @@ import Booking from "./pages/Booking";
 import Bookings from "./pages/Bookings";
 import UserDashboard from "./pages/UserDashboard";
 import Metrics from "./pages/Metrics";
+import Tasks from "./pages/Tasks";
 
 function App() {
   return (
@@ -61,6 +62,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <Bookings />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/tarefas"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <Tasks />
               </ProtectedRoute>
             }
           />

@@ -244,6 +244,10 @@ export default function Dashboard() {
       <div className="dashboard-topbar">
         <h1 className="dashboard-title">Painel do Administrador</h1>
 
+        <Link to="/admin/agendamentos" className="btn-secondary">
+          Pedidos
+        </Link>
+
         <Link to="/admin/metrics" className="btn-secondary">
           Métricas
         </Link>

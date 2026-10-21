@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "../styles/style.css";
 import {
   categoryLabels,
@@ -133,7 +134,10 @@ export default function Portfolio() {
             className="btn-primary"
           >
             Pedir orçamento
-          </a>
+          </a>{" "}
+          <Link to="/agendar" className="btn-secondary">
+            Agendar uma conversa
+          </Link>
         </div>
       </div>
 

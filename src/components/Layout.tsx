@@ -55,6 +55,9 @@ export default function Layout() {
             <Link to="/portfolio" onClick={closeMenu}>
               Portfólio
             </Link>
+            <Link to="/agendar" onClick={closeMenu}>
+              Agendar
+            </Link>
             <Link to="/youtube" onClick={closeMenu}>
               Youtube
             </Link>

@@ -13,6 +13,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Websites from "./pages/Websites";
 import Privacy from "./pages/Privacy";
 import Portfolio from "./pages/Portfolio";
+import Booking from "./pages/Booking";
+import Bookings from "./pages/Bookings";
 import UserDashboard from "./pages/UserDashboard";
 import Metrics from "./pages/Metrics";
 
@@ -32,6 +34,7 @@ function App() {
           <Route path="/websites" element={<Websites />} />
           <Route path="/privacidade" element={<Privacy />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/agendar" element={<Booking />} />
 
           {/* Dashboard USER */}
           <Route
@@ -49,6 +52,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/agendamentos"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <Bookings />
               </ProtectedRoute>
             }
           />

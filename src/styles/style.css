@@ -3147,3 +3147,148 @@ main > .content:not(.hero-section .content) .description {
     order: 3;
   }
 }
+
+/* ===== Meta de patrimônio ===== */
+.goal-hero {
+  margin: 1.25rem 0;
+  padding: 1.5rem 1.6rem;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card), var(--shadow-yellow);
+}
+
+.goal-hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.goal-pct {
+  color: var(--yellow);
+  font-size: clamp(2.4rem, 7vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.goal-pct-label {
+  margin-left: 0.5rem;
+  color: var(--muted);
+}
+
+.goal-days {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.goal-days strong {
+  color: white;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.1;
+}
+
+.goal-track {
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.goal-fill {
+  height: 100%;
+  min-width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--yellow), var(--yellow-hover));
+  box-shadow: var(--shadow-yellow);
+  transition: width 0.8s ease;
+}
+
+.goal-hero-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.7rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.goal-dist {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1.25rem 1.4rem;
+}
+
+.goal-stack {
+  display: flex;
+  height: 18px;
+  margin: 0.9rem 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.goal-stack-seg {
+  height: 100%;
+}
+
+.goal-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+
+.goal-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+}
+
+.goal-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.goal-legend-name {
+  color: white;
+}
+
+.goal-legend-val {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+.goal-form .goal-amount {
+  flex: 0 1 200px;
+}
+
+.goal-value {
+  flex: none;
+  background: transparent;
+  border: 0;
+  color: var(--yellow);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+}
+
+.goal-value:hover {
+  text-decoration: underline;
+}
+
+.goal-edit {
+  flex: 0 1 150px;
+  padding: 0.4rem 0.7rem;
+}

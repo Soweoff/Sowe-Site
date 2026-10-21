@@ -252,6 +252,10 @@ export default function Dashboard() {
           Missões
         </Link>
 
+        <Link to="/admin/meta" className="btn-secondary">
+          Meta
+        </Link>
+
         <Link to="/admin/metrics" className="btn-secondary">
           Métricas
         </Link>

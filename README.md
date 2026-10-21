@@ -22,6 +22,7 @@ Produção: <https://sowestudio.com.br>
 | `/login` · `/register` | Entrar e criar conta | Público |
 | `/dashboard` | Planejamento de entregas (calendário somente leitura) | Usuário logado |
 | `/admin/agendamentos` | Aprovar ou recusar pedidos de agendamento | Somente `ADMIN` |
+| `/admin/tarefas` | Missões do dia (concluiu, some da lista), XP, nível e relatório | Somente `ADMIN` |
 | `/admin/metrics` | Métricas dos canais do YouTube (totais e períodos de 30/90/365 dias) | Somente `ADMIN` |
 | `/admin` | Painel do administrador: agendamentos e usuários | Somente `ADMIN` |
 

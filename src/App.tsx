@@ -18,6 +18,7 @@ import Bookings from "./pages/Bookings";
 import UserDashboard from "./pages/UserDashboard";
 import Metrics from "./pages/Metrics";
 import Tasks from "./pages/Tasks";
+import Goal from "./pages/Goal";
 
 function App() {
   return (
@@ -71,6 +72,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <Tasks />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/meta"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <Goal />
               </ProtectedRoute>
             }
           />

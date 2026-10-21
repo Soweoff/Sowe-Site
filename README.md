@@ -23,6 +23,7 @@ Produção: <https://sowestudio.com.br>
 | `/dashboard` | Planejamento de entregas (calendário somente leitura) | Usuário logado |
 | `/admin/agendamentos` | Aprovar ou recusar pedidos de agendamento | Somente `ADMIN` |
 | `/admin/tarefas` | Missões do dia (concluiu, some da lista), XP, nível e relatório | Somente `ADMIN` |
+| `/admin/meta` | Meta de patrimônio (US$ 2 mi até 07/01/2028): progresso, dias restantes e carteira por categoria | Somente `ADMIN` |
 | `/admin/metrics` | Métricas dos canais do YouTube (totais e períodos de 30/90/365 dias) | Somente `ADMIN` |
 | `/admin` | Painel do administrador: agendamentos e usuários | Somente `ADMIN` |
 

@@ -1,4 +1,11 @@
+import { Link } from "react-router-dom";
+import { whatsappUrl } from "../data/brand";
+import { optimizeImage } from "../services/cloudinary";
+import { usePageTitle } from "../services/usePageTitle";
+
 export default function Edition() {
+  usePageTitle("Edição de vídeo, VFX e 3D");
+
   const equipments = [
     {
       name: "iPhone 12 Pro Max",
@@ -119,6 +126,20 @@ export default function Edition() {
             render final, entrego projetos completos com estética
             cinematográfica e foco em resultado.
           </p>
+
+          <div className="buttons">
+            <a
+              href={whatsappUrl("Olá! Quero orçar uma edição de vídeo com o Sowe Studio.")}
+              className="btn-get-started"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Solicitar Orçamento &gt;
+            </a>
+            <Link to="/portfolio" className="btn-signing-main">
+              Ver trabalhos &gt;
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -153,7 +174,11 @@ export default function Edition() {
             {softwares.map((item, index) => (
               <div key={index} className="equipment-card">
                 <div className="equipment-image">
-                  <img src={item.img} alt={item.name} />
+                  <img
+                    src={optimizeImage(item.img, 320)}
+                    alt={item.name}
+                    loading="lazy"
+                  />
                 </div>
                 <h3>{item.name}</h3>
                 <p>{item.desc}</p>
@@ -171,7 +196,11 @@ export default function Edition() {
             {equipments.map((item, index) => (
               <div key={index} className="equipment-card">
                 <div className="equipment-image">
-                  <img src={item.img} alt={item.name} />
+                  <img
+                    src={optimizeImage(item.img, 320)}
+                    alt={item.name}
+                    loading="lazy"
+                  />
                 </div>
                 <h3>{item.name}</h3>
                 <p>{item.desc}</p>
@@ -192,7 +221,7 @@ export default function Edition() {
           <h2>Vamos elevar o nível do seu projeto?</h2>
 
           <a
-            href="https://wa.me/5542984265832"
+            href={whatsappUrl("Olá! Quero orçar uma edição de vídeo com o Sowe Studio.")}
             className="btn-get-started cta-button"
             target="_blank"
             rel="noopener noreferrer"

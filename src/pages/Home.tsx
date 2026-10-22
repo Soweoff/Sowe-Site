@@ -11,13 +11,13 @@ export default function Home() {
               <div className="tag">Orçamentos</div>
             </div>
 
-            <h1>
-              PARA CRIADORES <br /> E EMPRESAS
+            <h1 className="hero-title">
+              VÍDEOS QUE VENDEM, <br /> NÃO SÓ APARECEM.
             </h1>
 
             <p className="description">
-              Sowe é criador de conteúdo com 3 canais no Youtube, além de
-              trabalhar com edição de vídeos para empresas e criadores.
+              Sowe Studio faz VFX, 3D, motion e design para criadores e
+              empresas. Sowe também mantém 3 canais no YouTube.
             </p>
 
             <div className="buttons">

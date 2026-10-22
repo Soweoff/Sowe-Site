@@ -19,16 +19,16 @@
   --surface: rgba(255, 255, 255, 0.035);
   --surface-strong: rgba(255, 255, 255, 0.065);
   --border: rgba(255, 255, 255, 0.11);
-  --border-strong: rgba(244, 201, 1, 0.42);
+  --border-strong: rgba(217, 169, 79, 0.42);
   --text: #e7e7e7;
   --muted: #a7a7a7;
   --muted-2: #777;
-  --yellow: #f4c901;
-  --yellow-hover: #ffd91a;
+  --yellow: #d9a94f;
+  --yellow-hover: #e8bd6a;
   --danger: #ff4d4f;
   --radius: 22px;
   --shadow-card: 0 18px 55px rgba(0, 0, 0, 0.35);
-  --shadow-yellow: 0 0 35px rgba(244, 201, 1, 0.16);
+  --shadow-yellow: 0 0 35px rgba(217, 169, 79, 0.16);
 }
 
 html {
@@ -61,7 +61,7 @@ body {
   background:
     radial-gradient(
       circle at top right,
-      rgba(244, 201, 1, 0.08),
+      rgba(217, 169, 79, 0.08),
       transparent 36%
     ),
     radial-gradient(
@@ -153,7 +153,7 @@ footer {
   position: absolute;
   top: 20%;
   right: 0;
-  box-shadow: 0 0 700px 15px rgba(244, 201, 1, 0.2);
+  box-shadow: 0 0 700px 15px rgba(217, 169, 79, 0.2);
   rotate: -30deg;
   z-index: 0;
   pointer-events: none;
@@ -317,7 +317,7 @@ nav a:hover::after {
 .channel-button:hover,
 .partner-button:hover,
 .product-button:hover {
-  background: rgba(244, 201, 1, 0.08);
+  background: rgba(217, 169, 79, 0.08);
   border-color: var(--border-strong);
   box-shadow: var(--shadow-yellow);
   transform: translateY(-2px);
@@ -439,7 +439,7 @@ nav a:hover::after {
   );
   background-size: 200%;
   animation: animateGradient 2.5s linear infinite;
-  box-shadow: 0 0 24px rgba(244, 201, 1, 0.16);
+  box-shadow: 0 0 24px rgba(217, 169, 79, 0.16);
 }
 
 @keyframes animateGradient {
@@ -636,7 +636,7 @@ nav a:hover::after {
   inset: 0;
   background:
     linear-gradient(to top, rgba(0, 0, 0, 0.84), rgba(0, 0, 0, 0.18)),
-    linear-gradient(135deg, rgba(244, 201, 1, 0.12), transparent 45%);
+    linear-gradient(135deg, rgba(217, 169, 79, 0.12), transparent 45%);
   z-index: 1;
 }
 
@@ -730,7 +730,7 @@ nav a:hover::after {
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 2px solid rgba(244, 201, 1, 0.25);
+  border: 2px solid rgba(217, 169, 79, 0.25);
 }
 
 .channel-info {
@@ -1065,7 +1065,7 @@ nav a:hover::after {
 
 .auth-form input:focus {
   border-color: var(--border-strong);
-  box-shadow: 0 0 0 4px rgba(244, 201, 1, 0.08);
+  box-shadow: 0 0 0 4px rgba(217, 169, 79, 0.08);
 }
 
 .auth-form button {
@@ -1747,7 +1747,7 @@ main > .content:not(.hero-section .content) .description {
 .event-checkbox-row input {
   width: 18px;
   height: 18px;
-  accent-color: #f4c901;
+  accent-color: #d9a94f;
 }
 
 @media (max-width: 768px) {
@@ -1933,7 +1933,7 @@ main > .content:not(.hero-section .content) .description {
 .event-checkbox-row input {
   width: 18px;
   height: 18px;
-  accent-color: #f4c901;
+  accent-color: #d9a94f;
   flex: 0 0 auto;
 }
 
@@ -2590,7 +2590,7 @@ main > .content:not(.hero-section .content) .description {
 }
 
 .metrics-spark-area {
-  fill: rgba(244, 201, 1, 0.12);
+  fill: rgba(217, 169, 79, 0.12);
   stroke: none;
 }
 
@@ -2973,7 +2973,7 @@ main > .content:not(.hero-section .content) .description {
 .tasks-item.done {
   opacity: 0;
   transform: translateX(28px) scale(0.97);
-  background: rgba(244, 201, 1, 0.12);
+  background: rgba(217, 169, 79, 0.12);
 }
 
 .tasks-item.finished {
@@ -3291,4 +3291,39 @@ main > .content:not(.hero-section .content) .description {
 .goal-edit {
   flex: 0 1 150px;
   padding: 0.4rem 0.7rem;
+}
+
+/* ===== Marca (logo no cabeçalho, rodapé e título da Home) ===== */
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo-emblem {
+  height: 2.6rem;
+  width: auto;
+  display: block;
+}
+
+.footer-logo {
+  display: block;
+  height: 64px;
+  width: auto;
+  max-width: 100%;
+  margin-bottom: 0.6rem;
+}
+
+.hero-section .content h1.hero-title {
+  font-size: clamp(1.9rem, 4.8vw, 4.8rem);
+  line-height: 1.12;
+  max-width: 52rem;
+}
+
+@media (max-width: 768px) {
+  .logo-emblem {
+    height: 2.1rem;
+  }
 }

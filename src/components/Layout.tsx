@@ -44,8 +44,7 @@ export default function Layout() {
               onClick={closeMenu}
               aria-label="Sowe Studio — página inicial"
             >
-              <img className="logo-emblem" src={BRAND.emblem} alt="" />
-              <span>SOWE</span>
+              <img className="logo-emblem" src={BRAND.emblem} alt="Sowe Studio" />
             </Link>
           </h1>
 

@@ -11,7 +11,7 @@ export const CATEGORY_INFO: Record<Category, { label: string; color: string }> =
   IMOVEL: { label: "Imóveis", color: "#60a5fa" },
   DINHEIRO: { label: "Dinheiro em mãos", color: "#4ade80" },
   ACOES: { label: "Ações", color: "#c084fc" },
-  BANCO: { label: "Banco rendendo", color: "#d9a94f" },
+  BANCO: { label: "Banco rendendo", color: "#f4c901" },
   SKINS: { label: "Skins de CS2", color: "#fb923c" },
   CRIPTO: { label: "Cripto", color: "#f472b6" },
   OUTROS: { label: "Outros", color: "#94a3b8" },

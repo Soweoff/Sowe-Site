@@ -5,7 +5,7 @@ export const DIFFICULTY_INFO: Record<
   { label: string; xp: number; color: string }
 > = {
   EASY: { label: "Fácil", xp: 10, color: "#4ade80" },
-  MEDIUM: { label: "Média", xp: 20, color: "#d9a94f" },
+  MEDIUM: { label: "Média", xp: 20, color: "#f4c901" },
   HARD: { label: "Difícil", xp: 40, color: "#fb923c" },
   EPIC: { label: "Épica", xp: 80, color: "#c084fc" },
 };

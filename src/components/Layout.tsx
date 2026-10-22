@@ -1,6 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
+import { BRAND } from "../data/brand";
 
 export default function Layout() {
   const { token, role, logout } = useAuth();
@@ -36,7 +37,17 @@ export default function Layout() {
       {/* CONTAINER */}
       <div className="container">
         <header>
-          <h1 className="logo">SOWE</h1>
+          <h1 className="logo">
+            <Link
+              to="/"
+              className="logo-link"
+              onClick={closeMenu}
+              aria-label="Sowe Studio — página inicial"
+            >
+              <img className="logo-emblem" src={BRAND.emblem} alt="" />
+              <span>SOWE</span>
+            </Link>
+          </h1>
 
           {/* MENU MOBILE */}
           <button
@@ -152,8 +163,13 @@ export default function Layout() {
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-brand">
-            <h3>SOWE</h3>
-            <p>VFX • 3D • Edição de Vídeo</p>
+            <img
+              className="footer-logo"
+              src={BRAND.fullLogo}
+              alt="Sowe Studio"
+              loading="lazy"
+            />
+            <p>VFX • 3D • Motion • Design</p>
           </div>
 
           <div className="footer-links">
@@ -174,7 +190,7 @@ export default function Layout() {
             </a>
 
             <a
-              href="https://wa.me/5542984265832"
+              href={BRAND.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
             >

@@ -3310,7 +3310,7 @@ main > .content:not(.hero-section .content) .description {
 
 .footer-logo {
   display: block;
-  height: 64px;
+  height: 120px;
   width: auto;
   max-width: 100%;
   margin-bottom: 0.6rem;
@@ -3325,5 +3325,9 @@ main > .content:not(.hero-section .content) .description {
 @media (max-width: 768px) {
   .logo-emblem {
     height: 2.9rem;
+  }
+
+  .footer-logo {
+    height: 90px;
   }
 }

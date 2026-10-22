@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePageTitle } from "../services/usePageTitle";
 
 interface ChannelData {
   id: string;
@@ -7,6 +8,8 @@ interface ChannelData {
 }
 
 export default function Youtube() {
+  usePageTitle("Canais do YouTube");
+
   const [channels, setChannels] = useState<Record<string, ChannelData>>({});
 
   useEffect(() => {

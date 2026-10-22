@@ -1,6 +1,9 @@
 import Spline from "@splinetool/react-spline";
+import { usePageTitle } from "../services/usePageTitle";
 
 export default function Home() {
+  usePageTitle("VFX, 3D, Motion e Design");
+
   return (
     <>
       {/* HERO */}

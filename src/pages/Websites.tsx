@@ -1,6 +1,11 @@
 import "../styles/style.css";
+import { whatsappUrl } from "../data/brand";
+import { optimizeImage } from "../services/cloudinary";
+import { usePageTitle } from "../services/usePageTitle";
 
 export default function Websites() {
+  usePageTitle("Criação de sites");
+
   const projects = [
     {
       title: "Sowe Studio",
@@ -38,7 +43,8 @@ export default function Websites() {
           {projects.map((project, index) => (
             <div key={index} className="portfolio-card">
               <img
-                src={project.image}
+                src={optimizeImage(project.image, 900)}
+                loading="lazy"
                 alt={project.title}
                 className="portfolio-image"
               />
@@ -61,6 +67,18 @@ export default function Websites() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="page-cta">
+          <h3>Quer um site assim para o seu negócio?</h3>
+          <a
+            href={whatsappUrl("Olá! Quero um site para o meu negócio.")}
+            className="btn-get-started"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pedir orçamento &gt;
+          </a>
         </div>
       </div>
     </section>

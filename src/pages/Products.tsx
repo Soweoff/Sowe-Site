@@ -1,14 +1,19 @@
+import { optimizeImage } from "../services/cloudinary";
+import { usePageTitle } from "../services/usePageTitle";
+
 export default function Products() {
+  usePageTitle("Cursos e produtos digitais");
+
   return (
     <>
       <div className="content">
         <h1>
-          CURSOS <br /> E TUTORIAIS
+          CURSOS <br /> E PRODUTOS
         </h1>
 
         <p className="description">
-          Cursos e conteúdos educacionais sobre edição, After Effects, Blender,
-          VFX e workflow profissional.
+          Cursos e produtos digitais sobre edição, After Effects, Blender, VFX,
+          skins de CS2 e criptomoedas.
         </p>
       </div>
 
@@ -20,8 +25,12 @@ export default function Products() {
           {/* Curso 1 */}
           <div className="product-card">
             <img
-              src="https://res.cloudinary.com/dvqbwddan/image/upload/v1769550317/Sowe-Site/CAPA-DO-CURSO_ezbomx.jpg"
+              src={optimizeImage(
+                "https://res.cloudinary.com/dvqbwddan/image/upload/v1769550317/Sowe-Site/CAPA-DO-CURSO_ezbomx.jpg",
+                900,
+              )}
               alt="Curso Criptomoedas"
+              loading="lazy"
             />
             <h3>
               Criptomoedas do Zero: Segurança, Carteiras, Trading e Uso Real
@@ -45,8 +54,12 @@ export default function Products() {
           {/* Curso 2 */}
           <div className="product-card">
             <img
-              src="https://res.cloudinary.com/dvqbwddan/image/upload/v1770788616/Sowe-Site/Capa-CS-ECONOMY_vtypfr.jpg"
+              src={optimizeImage(
+                "https://res.cloudinary.com/dvqbwddan/image/upload/v1770788616/Sowe-Site/Capa-CS-ECONOMY_vtypfr.jpg",
+                900,
+              )}
               alt="CS Economy"
+              loading="lazy"
             />
             <h3>CS ECONOMY</h3>
             <p>
@@ -67,8 +80,12 @@ export default function Products() {
           {/* Curso 3 */}
           <div className="product-card">
             <img
-              src="https://res.cloudinary.com/dvqbwddan/image/upload/v1770783426/Sowe-Site/Capa-do-curso-de-edi%C3%A7%C3%A3o_ahcoie.jpg"
+              src={optimizeImage(
+                "https://res.cloudinary.com/dvqbwddan/image/upload/v1770783426/Sowe-Site/Capa-do-curso-de-edi%C3%A7%C3%A3o_ahcoie.jpg",
+                900,
+              )}
               alt="Edição de Alto Valor"
+              loading="lazy"
             />
             <h3>Edição de Alto Valor</h3>
             <p>
@@ -76,11 +93,16 @@ export default function Products() {
               Blender, Cinema 4D, EmberGen, Marvelous Designer, After Effects e
               Premiere aplicados à produção profissional.
             </p>
-            <a href="#" className="product-button">
-              Saiba mais
-            </a>
+            <span className="product-button disabled" aria-disabled="true">
+              Em breve
+            </span>
           </div>
         </div>
+
+        <p className="page-note">
+          Conteúdo educacional. Não há garantia de resultados nem recomendação
+          de investimento: ganhos em trading e em skins envolvem risco.
+        </p>
 
         {/* ================= PRODUTOS ================= */}
         <h2 className="products-title">Produtos</h2>
@@ -89,34 +111,46 @@ export default function Products() {
           {/* Produto 1 */}
           <div className="product-card">
             <img
-              src="https://res.cloudinary.com/dvqbwddan/image/upload/v1772001857/Sowe-Site/Estilos%20de%20edi%C3%A7%C3%A3o/3D_jypqhk.png"
+              src={optimizeImage(
+                "https://res.cloudinary.com/dvqbwddan/image/upload/v1772001857/Sowe-Site/Estilos%20de%20edi%C3%A7%C3%A3o/3D_jypqhk.png",
+                900,
+              )}
               alt="Modelos 3D"
+              loading="lazy"
             />
             <h3>Modelos 3D</h3>
             <p>Assets otimizados para vídeos, jogos e renders.</p>
-            <a href="#" className="product-button">
-              Ver produto
-            </a>
+            <span className="product-button disabled" aria-disabled="true">
+              Em breve
+            </span>
           </div>
 
           {/* Produto 2 */}
           <div className="product-card">
             <img
-              src="https://res.cloudinary.com/dvqbwddan/image/upload/v1777745790/Sowe-Site/ky3cmkih_gh13pq.jpg"
+              src={optimizeImage(
+                "https://res.cloudinary.com/dvqbwddan/image/upload/v1777745790/Sowe-Site/ky3cmkih_gh13pq.jpg",
+                900,
+              )}
               alt="Assets"
+              loading="lazy"
             />
             <h3>Assets & Packs</h3>
             <p>Packs de efeitos, overlays e elementos visuais.</p>
-            <a href="#" className="product-button">
-              Ver produto
-            </a>
+            <span className="product-button disabled" aria-disabled="true">
+              Em breve
+            </span>
           </div>
 
           {/* Produto 3 */}
           <div className="product-card">
             <img
-              src="https://res.cloudinary.com/dvqbwddan/image/upload/v1770753125/Sowe-Site/Capa-do-Pack-de-editing_u3a4ht.jpg"
+              src={optimizeImage(
+                "https://res.cloudinary.com/dvqbwddan/image/upload/v1770753125/Sowe-Site/Capa-do-Pack-de-editing_u3a4ht.jpg",
+                900,
+              )}
               alt="Pack de Edição"
+              loading="lazy"
             />
             <h3>Pack de Edição</h3>
             <p>Presets, LUTs e templates para acelerar seu workflow.</p>

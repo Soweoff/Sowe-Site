@@ -1,16 +1,22 @@
+import { whatsappUrl } from "../data/brand";
+import { optimizeImage } from "../services/cloudinary";
+import { usePageTitle } from "../services/usePageTitle";
+
 export default function CS2() {
+  usePageTitle("Compra e venda de skins de CS2");
+
   return (
     <>
       {/* MAIN */}
       <main>
         <div className="content">
           <h1>
-            COMPRAMOS & VENDENOS <br /> SKINS DE CS2
+            COMPRAMOS & VENDEMOS <br /> SKINS DE CS2
           </h1>
 
           <p className="description">
-            Aqui você aprende tudo sobre CS2 skins, trade, upgrades e
-            estratégias de lucro.
+            Compra e venda de skins de CS2, com conteúdo sobre trade, upgrades
+            e estratégias de mercado.
           </p>
 
           <div className="buttons">
@@ -21,6 +27,15 @@ export default function CS2() {
               className="btn-get-started"
             >
               Mande mensagem aqui
+            </a>
+
+            <a
+              href={whatsappUrl("Olá! Quero comprar ou vender skins de CS2.")}
+              className="btn-signing-main"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp &gt;
             </a>
           </div>
         </div>
@@ -47,12 +62,20 @@ export default function CS2() {
 
             <div className="cs2-images">
               <img
-                src="https://res.cloudinary.com/dvqbwddan/image/upload/v1769360196/Sowe-Site/CS2-IMG-1_w5glje.jpg"
+                src={optimizeImage(
+                  "https://res.cloudinary.com/dvqbwddan/image/upload/v1769360196/Sowe-Site/CS2-IMG-1_w5glje.jpg",
+                  900,
+                )}
                 alt="CS2"
+                loading="lazy"
               />
               <img
-                src="https://res.cloudinary.com/dvqbwddan/image/upload/v1769360197/Sowe-Site/CS2-IMG-2_ui4cu1.jpg"
+                src={optimizeImage(
+                  "https://res.cloudinary.com/dvqbwddan/image/upload/v1769360197/Sowe-Site/CS2-IMG-2_ui4cu1.jpg",
+                  900,
+                )}
                 alt="CS2"
+                loading="lazy"
               />
             </div>
           </div>
@@ -61,6 +84,13 @@ export default function CS2() {
         {/* PARCEIROS */}
         <section className="cs2-partners">
           <h2>Parceiros & Cupons</h2>
+
+          <p className="page-note">
+            Publicidade: são links de indicação e posso receber comissão quando
+            você usa meus cupons. Os bônus mudam com o tempo; confira no site do
+            parceiro. Conteúdo para maiores de 18 anos. Jogue com
+            responsabilidade.
+          </p>
 
           <div className="partners-list">
             {/* Skinsmonkey */}

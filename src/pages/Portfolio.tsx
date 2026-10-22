@@ -9,6 +9,7 @@ import {
   type Category,
   type Project,
 } from "../data/projects";
+import { usePageTitle } from "../services/usePageTitle";
 
 const WHATSAPP_URL =
   "https://wa.me/5542984265832?text=Olá!%20Vi%20o%20portfólio%20e%20gostaria%20de%20um%20orçamento.";
@@ -16,6 +17,8 @@ const WHATSAPP_URL =
 const filters = Object.keys(categoryLabels) as Array<Category | "all">;
 
 export default function Portfolio() {
+  usePageTitle("Portfólio");
+
   const [active, setActive] = useState<Category | "all">("all");
   const [selected, setSelected] = useState<Project | null>(null);
 

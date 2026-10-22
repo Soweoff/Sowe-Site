@@ -3331,3 +3331,44 @@ main > .content:not(.hero-section .content) .description {
     height: 90px;
   }
 }
+
+/* ===== Avisos, botão "Em breve" e chamada final ===== */
+.product-button.disabled {
+  color: var(--muted);
+  cursor: default;
+  opacity: 0.7;
+}
+
+.product-button.disabled:hover {
+  background: rgba(255, 255, 255, 0.025);
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+}
+
+.page-note {
+  max-width: 52rem;
+  margin: 0.75rem auto 1.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.page-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 3.5rem;
+  padding: 2.2rem 1.5rem;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+
+.page-cta h3 {
+  color: white;
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+}

@@ -10,3 +10,8 @@ export const BRAND = {
   fullLogo: `${BASE}/f_auto,q_auto,h_260/v1792644821/Sowe-Site/Dourado-Sowe-Studio-Site_isw13k.png`,
   whatsapp: "https://wa.me/5542984265832",
 };
+
+// Link do WhatsApp com a mensagem já escrita.
+export function whatsappUrl(message: string): string {
+  return `${BRAND.whatsapp}?text=${encodeURIComponent(message)}`;
+}

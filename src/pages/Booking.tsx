@@ -3,6 +3,7 @@ import { isAxiosError } from "axios";
 import { api } from "../services/api";
 import { formatDay, formatLong } from "../services/bookingFormat";
 import "../styles/style.css";
+import { usePageTitle } from "../services/usePageTitle";
 
 interface DaySlots {
   date: string;
@@ -32,6 +33,8 @@ function errorMessage(err: unknown): string {
 }
 
 export default function Booking() {
+  usePageTitle("Agendar uma conversa");
+
   const [days, setDays] = useState<DaySlots[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");

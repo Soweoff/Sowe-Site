@@ -2624,30 +2624,6 @@ main > .content:not(.hero-section .content) .description {
   color: var(--danger);
 }
 
-/* Painel de desempenho na página pública /youtube */
-.youtube-metrics {
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: clamp(2rem, 4vw, 4rem) 1.25rem 4rem;
-  box-sizing: border-box;
-}
-
-.youtube-metrics-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-}
-
-.youtube-metrics-head h2 {
-  margin: 0;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  letter-spacing: 0.06em;
-}
-
 /* =========================
    PÁGINAS LEGAIS
 ========================= */

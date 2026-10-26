@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
 import { usePageTitle } from "../services/usePageTitle";
 import { api } from "../services/api";
-import YoutubeMetricsPanel from "../components/YoutubeMetricsPanel";
-import { PERIODS, type YoutubeResponse } from "../services/youtubeMetrics";
 
 interface ChannelData {
   id: string;
   subs: number;
   views: number;
+}
+
+interface LiveChannel {
+  id: string;
+  subscribers: number | null; // null quando o canal esconde os inscritos
+  views: number;
+  videos: number;
+}
+
+interface LiveResponse {
+  channels: LiveChannel[];
 }
 
 const APPS_SCRIPT_URL =
@@ -43,17 +52,27 @@ const fmt = (n: number | null | undefined) =>
 export default function Youtube() {
   usePageTitle("Canais do YouTube");
 
-  // Reserva: números simples vindos do Google Apps Script. Servem enquanto a
-  // API ainda acorda (o servidor gratuito pode demorar) ou se ela falhar.
+  // Números ao vivo, direto da API do YouTube (via backend, com cache de 10 min).
+  const [live, setLive] = useState<Record<string, LiveChannel>>({});
+
+  // Reserva: números do Google Apps Script. Aparecem enquanto a API acorda (o
+  // servidor gratuito pode demorar) ou se ela falhar.
   const [fallback, setFallback] = useState<Record<string, ChannelData>>({});
 
-  const [days, setDays] = useState(30);
-  const [metrics, setMetrics] = useState<YoutubeResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [failed, setFailed] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-
   useEffect(() => {
+    async function fetchLive() {
+      try {
+        const res = await api.get<LiveResponse>("/public/metrics/youtube");
+        const mapped: Record<string, LiveChannel> = {};
+        res.data.channels.forEach((channel) => {
+          mapped[channel.id] = channel;
+        });
+        setLive(mapped);
+      } catch (error) {
+        console.error("Erro ao carregar dados do YouTube:", error);
+      }
+    }
+
     async function fetchFallback() {
       try {
         const response = await fetch(APPS_SCRIPT_URL);
@@ -63,40 +82,15 @@ export default function Youtube() {
         data.forEach((channel) => {
           mapped[channel.id] = channel;
         });
-
         setFallback(mapped);
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
       }
     }
 
+    fetchLive();
     fetchFallback();
   }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        setLoading(true);
-        setFailed(false);
-        const res = await api.get<YoutubeResponse>("/public/metrics/youtube", {
-          params: { days },
-        });
-        if (!cancelled) setMetrics(res.data);
-      } catch (error) {
-        console.error("Erro ao carregar métricas:", error);
-        if (!cancelled) setFailed(true);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [days, attempt]);
 
   return (
     <>
@@ -118,10 +112,10 @@ export default function Youtube() {
 
           <div className="youtube-list">
             {CHANNELS.map((channel) => {
-              const live = metrics?.channels.find((c) => c.id === channel.id);
+              const liveData = live[channel.id];
               const backup = fallback[channel.id];
-              const subs = live ? live.subscribers : backup?.subs;
-              const views = live ? live.views : backup?.views;
+              const subs = liveData ? liveData.subscribers : backup?.subs;
+              const views = liveData ? liveData.views : backup?.views;
 
               return (
                 <div className="youtube-card" key={channel.id}>
@@ -133,11 +127,11 @@ export default function Youtube() {
                   <div className="channel-info">
                     <h3>{channel.name}</h3>
                     <p>
-                      {live && live.subscribers === null
+                      {liveData && liveData.subscribers === null
                         ? "inscritos ocultos"
                         : `${fmt(subs)} inscritos`}{" "}
                       • {fmt(views)} views totais
-                      {live ? ` • ${fmt(live.videos)} vídeos` : ""}
+                      {liveData ? ` • ${fmt(liveData.videos)} vídeos` : ""}
                     </p>
                   </div>
                   <a
@@ -152,51 +146,6 @@ export default function Youtube() {
               );
             })}
           </div>
-        </section>
-
-        <section className="youtube-metrics">
-          <div className="youtube-metrics-head">
-            <h2>Desempenho dos canais</h2>
-
-            <div className="metrics-periods" role="group" aria-label="Período">
-              {PERIODS.map((p) => (
-                <button
-                  key={p.days}
-                  type="button"
-                  className={`metrics-period${days === p.days ? " active" : ""}`}
-                  aria-pressed={days === p.days}
-                  onClick={() => setDays(p.days)}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {!metrics && loading && (
-            <p className="metrics-note">Carregando os números…</p>
-          )}
-
-          {failed && (
-            <p className="metrics-note">
-              Não foi possível carregar os números detalhados agora.{" "}
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={() => setAttempt((n) => n + 1)}
-              >
-                Tentar de novo
-              </button>
-            </p>
-          )}
-
-          {metrics && (
-            <YoutubeMetricsPanel
-              data={metrics}
-              days={days}
-              loading={loading}
-            />
-          )}
         </section>
       </main>
     </>

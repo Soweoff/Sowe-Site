@@ -25,24 +25,24 @@ const APPS_SCRIPT_URL =
 const CHANNELS = [
   {
     id: "UCxwte-dvs1WgDN1okSweY3g",
-    name: "Sowe VFX",
-    url: "https://www.youtube.com/@Sowevfx",
+    name: "Sowe Studio",
+    url: "https://www.youtube.com/@Sowe_Studio",
     avatar:
-      "https://res.cloudinary.com/dvqbwddan/image/upload/v1769353632/Sowe-Site/Imagem_do_WhatsApp_de_2025-12-14_%C3%A0_s_00.53.30_ea29c35f_wwn1ze.jpg",
+      "https://res.cloudinary.com/dvqbwddan/image/upload/v1792644563/Sowe-Site/Emblema-Dourado-Sowe-Studio_brasao_sgukbw.png",
   },
   {
     id: "UCYoE3K0i6DBznVicn7pOmww",
-    name: "Lil Sowe",
-    url: "https://www.youtube.com/@LiLSoweoff",
+    name: "Cortes Do Sowe",
+    url: "https://www.youtube.com/@CortesDoSowe",
     avatar:
-      "https://res.cloudinary.com/dvqbwddan/image/upload/v1769353606/Sowe-Site/Imagem_do_WhatsApp_de_2025-03-30_%C3%A0_s_23.31.38_23867bab_xskp2y.jpg",
+      "https://res.cloudinary.com/dvqbwddan/image/upload/v1792984235/Sowe-Site/Emblema_Circular_CORTES_DO_SOWE_1_dxeyfp.png",
   },
   {
     id: "UCMQL_xF785CLONsDaASzUmQ",
     name: "Soweoff",
     url: "https://www.youtube.com/@Sowe_off",
     avatar:
-      "https://res.cloudinary.com/dvqbwddan/image/upload/v1769353642/Sowe-Site/Art-WhatsApp_dcoss1.png",
+      "https://res.cloudinary.com/dvqbwddan/image/upload/v1792984417/Sowe-Site/Retrato_profissional_em_fundo_dourado_intensos_npw19j.png",
   },
 ];
 
